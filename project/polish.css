@@ -129,8 +129,7 @@
   overflow: hidden;
 }
 
-/* ---------- (9) Hero rhythm: orb → eyebrow → h1 → lede → input */
-.ws-orb { margin-bottom: 18px !important; }
+/* ---------- (9) Hero rhythm: eyebrow → h1 → lede → input */
 .ws-eyebrow { margin-bottom: 18px !important; }
 .ws-hero h1 {
   margin: 0 0 16px !important;

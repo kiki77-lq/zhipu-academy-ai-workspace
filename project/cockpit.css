@@ -119,57 +119,13 @@ body.ws-body::before {
 }
 .v0-pill .d { background: #F4B373 !important; box-shadow: 0 0 0 2px rgba(245,158,90,0.22); }
 
-/* ---------- 4. CENTER HERO — Orb above title ------------- */
+/* ---------- 4. CENTER HERO ----------------------------- */
 .ws-hero { text-align: center; }
 .ws-hero .ws-eyebrow,
 .ws-hero h1,
 .ws-hero .ws-lede { text-align: center; }
 .ws-hero h1 { white-space: normal !important; }
 .ws-hero .ws-lede { margin: 0 auto !important; }
-
-.ws-orb {
-  position: relative;
-  width: 88px; height: 88px;
-  margin: 0 auto 22px;
-  display: block;
-}
-.ws-orb .orb-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  pointer-events: none;
-}
-.ws-orb .orb-ring-1 { inset: -8px; border-color: rgba(255, 255, 255, 0.06); }
-.ws-orb .orb-ring-2 { inset: 6px; border-color: rgba(245, 158, 90, 0.22); }
-.ws-orb .orb-core {
-  position: absolute;
-  inset: 14px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 32% 28%, rgba(255, 222, 180, 0.85) 0%, transparent 40%),
-    radial-gradient(circle at 70% 70%, rgba(139, 140, 246, 0.55) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, #E58D4A 0%, #B25A24 55%, #2A1A10 100%);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 230, 200, 0.45),
-    inset 0 -8px 18px rgba(120, 50, 10, 0.55),
-    0 0 60px rgba(245, 158, 90, 0.30),
-    0 0 100px rgba(139, 140, 246, 0.16);
-  animation: orbBreath 5s ease-in-out infinite;
-}
-.ws-orb .orb-shine {
-  position: absolute;
-  top: 16px; left: 22px;
-  width: 26px; height: 16px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(255, 245, 220, 0.55) 0%, transparent 70%);
-  filter: blur(2px);
-  pointer-events: none;
-}
-@keyframes orbBreath {
-  0%, 100% { transform: scale(1); filter: brightness(1); }
-  50%      { transform: scale(1.04); filter: brightness(1.08); }
-}
 
 /* ---------- 5. TYPOGRAPHY contrast (recap) --------------- */
 .ws-body {
@@ -491,8 +447,3 @@ body.ws-body::before {
 /* ---------- 15. Hero h1 contrast ------------------------ */
 .ws-hero h1 { color: #F4F1EA; font-weight: 500; letter-spacing: -0.018em; }
 .ws-hero .ws-lede { color: var(--text-2); max-width: 48ch; }
-
-/* ---------- 16. Mobile fallback (already had base) ------ */
-@media (max-width: 1280px) {
-  .ws-orb { width: 76px; height: 76px; }
-}
