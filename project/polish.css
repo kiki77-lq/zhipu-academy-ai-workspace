@@ -1,0 +1,179 @@
+/* =========================================================
+   POLISH — final pass: spacing, ellipsis, density fixes
+   Loaded LAST. Wins over cockpit.css / refine.css.
+   ========================================================= */
+
+/* ---------- (1) Task card top-right tag + number ---------- */
+.ws-quick-card .qc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+.ws-quick-card .qc-num {
+  flex-shrink: 0;
+}
+/* the right-side meta tag — keep it from overlapping with the absolute "推荐起点" badge */
+.ws-quick-card .qc-head > span:last-child {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 12px;
+}
+/* When card has the absolute "推荐起点" badge, give head more right room */
+.ws-quick-card.is-start .qc-head > span:last-child {
+  visibility: hidden;          /* meta tag duplicates with badge — hide to avoid overlap */
+}
+/* The "推荐起点" badge needs flex-shrink: 0 implicit via absolute, but ensure it doesn't crowd */
+.ws-quick-card.is-start::after {
+  top: 14px;
+  right: 14px;
+}
+
+/* ---------- (2) Sidebar task description — single line ---- */
+.ws-task .d {
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: unset !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.ws-task .body { min-width: 0; overflow: hidden; }
+.ws-task .t {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- (3) Task card foot spacing ------------------- */
+.ws-quick-card .qc-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+.ws-quick-card .qc-foot > span:first-child {
+  flex-shrink: 0;
+}
+.ws-quick-card .qc-foot .arr {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding-left: 12px;
+}
+
+/* ---------- (4) Recent Tasks row — title and tag no clash - */
+.asst-row { gap: 12px; }
+.asst-row-body {
+  min-width: 0;
+  overflow: hidden;
+}
+.asst-row-t {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.asst-row-d {
+  flex-wrap: nowrap;
+  overflow: hidden;
+  min-width: 0;
+}
+.asst-tag {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.asst-row-d > span:not(.asst-tag) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* ---------- (5) KB coverage removed via [hidden] on HTML -- */
+.ws-kbcov[hidden] { display: none !important; }
+
+/* ---------- (6) Suggested Next — 16px gap to Recent ------- */
+#panelBody .asst-panel { gap: 22px; }
+#panelBody .asst-section + .asst-section { margin-top: 0; }
+#panelBody .asst-chips { gap: 8px; }
+
+/* ---------- (7) Lede already shortened in HTML ------------ */
+.ws-hero .ws-lede {
+  font-size: 14.5px;
+  line-height: 1.55;
+  max-width: 44ch;
+}
+
+/* ---------- (8) Quick grid gap + card padding ------------- */
+.ws-quick-grid {
+  gap: 16px !important;
+}
+.ws-quick-card {
+  padding: 20px 24px !important;
+  gap: 10px !important;
+}
+.ws-quick-card .qc-title {
+  font-size: 16.5px;
+  line-height: 1.35;
+}
+.ws-quick-card .qc-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  /* keep 2 lines max */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- (9) Hero rhythm: orb → eyebrow → h1 → lede → input */
+.ws-orb { margin-bottom: 18px !important; }
+.ws-eyebrow { margin-bottom: 18px !important; }
+.ws-hero h1 {
+  margin: 0 0 16px !important;
+  font-size: 46px !important;
+  line-height: 1.12 !important;
+}
+.ws-hero .ws-lede { margin: 0 auto !important; }
+.ws-hero { margin-bottom: 28px !important; }
+.ws-cmd { margin-bottom: 28px !important; }
+
+/* ---------- (10) Center column top padding --------------- */
+.ws-main-inner {
+  padding-top: 40px !important;
+}
+.ws-main { padding: 0 !important; }
+
+/* extra: tighten ws-quick spacing since KB block is gone */
+.ws-quick { margin-bottom: 24px !important; }
+
+/* extra: ensure task card foot meta doesn't collide with "推荐起点" badge */
+.ws-quick-card.is-start { padding-top: 22px !important; }
+.ws-quick-card.is-start .qc-head { padding-right: 80px; }
+.ws-quick-card.is-start::after {
+  z-index: 2;
+  top: 16px;
+  right: 16px;
+}
+
+/* extra: sidebar count not overlapping label */
+.ws-section-title { gap: 12px; }
+
+/* extra: panel head crumb safe */
+.ws-panel .panel-head { gap: 12px; }
+.ws-panel .crumb { min-width: 0; overflow: hidden; }
+.ws-panel .crumb b {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+/* extra: assistant chip text-overflow safety */
+.asst-chip { min-width: 0; }
+.asst-chip-t { min-width: 0; }

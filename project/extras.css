@@ -1,0 +1,184 @@
+/* ===== Academy Assistant Preview ===== */
+.assistant-preview {
+  position: absolute;
+  top: 88px;
+  right: max(24px, calc((100vw - 1200px) / 2));
+  width: 320px;
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.008));
+  border: 1px solid var(--border);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 20px 60px -30px rgba(0,0,0,0.7);
+  z-index: 3;
+  cursor: pointer;
+  transition: border-color .2s, transform .25s cubic-bezier(.22,1,.36,1);
+}
+.assistant-preview:hover {
+  border-color: var(--primary-line);
+  transform: translateY(-2px);
+}
+.ap-head {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--border-soft);
+}
+.ap-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 3px rgba(20,184,166,0.18);
+  animation: apPulse 2.4s ease-in-out infinite;
+}
+@keyframes apPulse { 0%,100%{opacity:1;} 50%{opacity:.45;} }
+.ap-name {
+  color: var(--text);
+  font-weight: 500;
+  flex: 1;
+}
+.ap-state {
+  color: var(--teal);
+  font-size: 10.5px;
+  text-transform: uppercase;
+}
+.ap-task {
+  margin-top: 14px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.ap-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+.ap-q {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.3;
+  color: var(--text);
+  letter-spacing: -0.005em;
+}
+.ap-out {
+  margin-top: 14px;
+}
+.ap-chips {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.ap-chips li {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 9px;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-2);
+  background: rgba(255,255,255,0.015);
+}
+.ap-chips li .n {
+  width: 14px; height: 14px;
+  border-radius: 3px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-family: var(--mono);
+  font-size: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--primary-line);
+}
+.ap-foot {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-soft);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.ap-cta {
+  color: var(--primary);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 1100px) {
+  .assistant-preview {
+    position: static;
+    width: auto;
+    max-width: 520px;
+    margin-top: 32px;
+  }
+}
+
+/* ===== Footer Roadmap ===== */
+.roadmap {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex; flex-direction: column;
+  gap: 8px;
+}
+.roadmap li {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.012);
+}
+.roadmap .rm-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.04);
+  color: var(--text-3);
+  border: 1px solid var(--border-soft);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.roadmap .rm-now {
+  border-color: var(--primary-line);
+  background: var(--primary-soft);
+}
+.roadmap .rm-now .rm-tag {
+  background: var(--primary);
+  color: #0D0F14;
+  border-color: var(--primary);
+}
+.roadmap .rm-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.35;
+  display: flex; flex-direction: column;
+}
+.roadmap .rm-text small {
+  color: var(--text-3);
+  font-size: 11px;
+  margin-top: 2px;
+}
+.roadmap .rm-now .rm-text small { color: var(--text-2); }
+
+/* ===== V0 badge on nav ===== */
+.v0-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 6px 10px !important;
+}
+.v0-tag::before {
+  content: "";
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-right: 6px;
+  vertical-align: middle;
+}

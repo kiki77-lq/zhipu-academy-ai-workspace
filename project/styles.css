@@ -1,0 +1,134 @@
+/* ===== 智谱书院 AI Portal — Design Tokens ===== */
+:root {
+  --bg: #0D0F14;
+  --bg-elev: #11141B;
+  --card: #161922;
+  --card-hover: #1B1F2A;
+  --border: #2B303B;
+  --border-soft: #20242E;
+  --text: #EDEFF3;
+  --text-2: #A1A1AA;
+  --text-3: #6B7280;
+  --primary: #8B8CF6;
+  --primary-soft: rgba(139, 140, 246, 0.12);
+  --primary-line: rgba(139, 140, 246, 0.28);
+  --teal: #14B8A6;
+  --teal-soft: rgba(20, 184, 166, 0.12);
+  --teal-line: rgba(20, 184, 166, 0.32);
+  --serif: "Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", serif;
+  --sans: "Inter", "PingFang SC", "Source Han Sans SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --shadow-card: 0 1px 0 rgba(255,255,255,0.02) inset, 0 0 0 1px rgba(255,255,255,0.01);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.005em;
+}
+
+/* === Hero noise + grid texture === */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 75%);
+}
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 40% at 25% 20%, rgba(139,140,246,0.10), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 80% 30%, rgba(20,184,166,0.06), transparent 70%);
+}
+.noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* === Layout === */
+.shell { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+/* === Top Nav === */
+.nav {
+  position: sticky; top: 0; z-index: 40;
+  backdrop-filter: blur(14px);
+  background: rgba(13, 15, 20, 0.72);
+  border-bottom: 1px solid var(--border-soft);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  height: 28px;
+  width: auto;
+  display: block;
+  border-radius: 6px;
+}
+.brand-mark-light { display: none; }
+body[data-theme="daylight"] .brand-mark-dark,
+body[data-theme="paper"]    .brand-mark-dark { display: none; }
+body[data-theme="daylight"] .brand-mark-light,
+body[data-theme="paper"]    .brand-mark-light { display: block; }
+.brand-name {
+  display: flex; flex-direction: column; line-height: 1.1;
+}
+.brand-zh { font-family: var(--serif); font-size: 15px; font-weight: 600; letter-spacing: 0.02em; }
+.brand-en { font-size: 10px; color: var(--text-3); letter-spacing: 0.12em; text-transform: uppercase; }
+
+.nav-links { display: flex; gap: 4px; }
+.nav-links a {
+  color: var(--text-2); text-decoration: none; font-size: 13.5px;
+  padding: 7px 12px; border-radius: 6px; transition: color .15s, background .15s;
+}
+.nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.ai-online {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-2);
+  padding: 5px 10px 5px 8px; border-radius: 100px;
+  background: rgba(20,184,166,0.06);
+  border: 1px solid var(--teal-line);
+}
+.ai-online .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 0 rgba(20,184,166,0.6);
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(20,184,166,0.55); }
+  70% { box-shadow: 0 0 0 6px rgba(20,184,166,0); }
+  100% { box-shadow: 0 0 0 0 rgba(20,184,166,0); }
+}
+.btn-ghost {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text); font-size: 13px;
+  padding: 7px 14px; border-radius: 7px; cursor: pointer;
+  font-family: inherit;
+}
+.btn-ghost:hover { background: var(--card); }

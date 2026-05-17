@@ -1,0 +1,515 @@
+/* =========================================================
+   REFINE — v2 contrast + capability panel + source cards
+   + KB coverage chips + sidebar section labels
+   Loaded LAST so it wins over workspace.css warm-glass theme
+   ========================================================= */
+
+/* ---------- 1. CONTRAST: bump text up, keep warm cast ----- */
+.ws-body {
+  /* keep palette warm but boost lightness to slate-equivalent levels */
+  --text:   #F1F5F9;   /* main */
+  --text-2: #CBD5E1;   /* body */
+  --text-3: #94A3B8;   /* secondary */
+  --text-4: #64748B;   /* faint floor — never below this */
+}
+
+/* Common overrides for warm-glass theme — keep amber primary, but use higher-contrast text */
+.ws-body .ws-task .d,
+.ws-body .ws-quick-card .qc-desc,
+.ws-body .ws-lede,
+.ws-body .ws-empty p,
+.ws-body .ws-empty-tips li {
+  color: var(--text-2);
+}
+.ws-body .ws-task .t,
+.ws-body .ws-quick-card .qc-title,
+.ws-body .ws-id-text .t,
+.ws-body .ws-hero h1,
+.ws-body .ws-quick-head h3,
+.ws-body .ws-panel .panel-q,
+.ws-body .ws-empty h4 {
+  color: var(--text);
+}
+.ws-body .ws-id-text .s,
+.ws-body .ws-task .num,
+.ws-body .ws-quick-card .qc-head,
+.ws-body .ws-panel .crumb,
+.ws-body .ws-panel .ans-block h4,
+.ws-body .ws-quick-card .qc-foot,
+.ws-body .ws-panel .panel-q-meta {
+  color: var(--text-3);
+}
+.ws-body .ws-section-title { color: var(--text-3); }
+.ws-body .ws-count { color: var(--text-4); }
+.ws-body .ws-kb-list li { color: var(--text-2); }
+.ws-body .ws-kb-list small { color: var(--text-4); }
+.ws-body .ws-main-foot { color: var(--text-4); }
+.ws-body .panel-foot { color: var(--text-3); }
+
+/* ---------- 2. SIDEBAR section labels (hint + count) ------ */
+.ws-section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+  font-family: var(--sans) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--text-2) !important;
+  margin: 0 0 10px !important;
+  padding: 0 4px !important;
+}
+.ws-section-title > span:first-child { color: var(--text); font-weight: 600; }
+.ws-section-hint {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  font-weight: 500;
+}
+.ws-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-4);
+  font-weight: 500;
+}
+
+/* ---------- 3. KB LIST in sidebar — softer, readable ------ */
+.ws-kb-list li {
+  padding: 8px 8px;
+  gap: 8px;
+}
+.ws-kb-list .kb-name {
+  font-size: 12.5px;
+  color: var(--text);
+  font-weight: 500;
+}
+.ws-kb-list small {
+  font-family: var(--mono);
+  font-size: 10px;
+  margin-left: auto;
+  letter-spacing: 0.02em;
+}
+.ws-kb-list .kb-dot {
+  background: var(--primary);
+  opacity: 0.7;
+}
+
+/* ---------- 4. Identity blocks (warm but more readable) -- */
+.ws-id-text .s {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 2px;
+  letter-spacing: 0;
+}
+.ws-id.active .ws-id-text .s { color: var(--text-2); }
+
+/* ---------- 5. TASK list (left) — better contrast --------- */
+.ws-task .t { font-size: 13px; font-weight: 500; }
+.ws-task .d {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-3);
+}
+.ws-task.is-active .d { color: var(--text-2); }
+
+/* ---------- 6. Center column eyebrow + cards readability -- */
+.ws-eyebrow {
+  color: var(--text-2) !important;
+  font-family: var(--mono);
+}
+.ws-quick-card .qc-desc {
+  color: var(--text-2) !important;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+/* ---------- 7. KB COVERAGE module (center, below grid) --- */
+.ws-kbcov {
+  margin-bottom: 32px;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: kbcovIn .6s cubic-bezier(.2,.7,.2,1) .35s forwards;
+}
+@keyframes kbcovIn { to { opacity: 1; transform: translateY(0); } }
+.ws-kbcov-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.ws-kbcov-head h3 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--text);
+}
+.ws-kbcov-sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+}
+.ws-kbcov-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.kbcov-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px 9px;
+  background: rgba(255, 245, 220, 0.025);
+  border: 1px solid rgba(255, 238, 200, 0.08);
+  border-radius: 10px;
+  position: relative;
+  transition: border-color .15s, background .15s;
+  backdrop-filter: blur(10px);
+}
+.kbcov-chip:hover {
+  background: rgba(255, 245, 220, 0.05);
+  border-color: rgba(212, 166, 106, 0.32);
+}
+.kbcov-chip .kc-tag {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.kbcov-chip .kc-name {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+.kbcov-chip .kc-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-4);
+  letter-spacing: 0.01em;
+}
+
+/* ---------- 8. CAPABILITY PANEL (right default state) ----- */
+#panelBody .cap-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.cap-head {
+  display: flex;
+  gap: 14px;
+  padding: 0 4px;
+}
+.cap-orb {
+  flex-shrink: 0;
+  position: relative;
+  width: 44px; height: 44px;
+  margin-top: 2px;
+}
+.cap-orb span {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1px solid rgba(212, 166, 106, 0.28);
+}
+.cap-orb span:nth-child(2) {
+  inset: 6px;
+  border-color: rgba(212, 166, 106, 0.2);
+  animation: orbPulse 3.4s ease-in-out infinite;
+}
+.cap-orb span:nth-child(3) {
+  inset: 14px;
+  background: radial-gradient(circle at 35% 30%, #F2D29A 0%, #C28F4F 50%, #6E4A24 100%);
+  border: none;
+  box-shadow: 0 0 28px rgba(212, 166, 106, 0.45);
+}
+.cap-head-text { flex: 1; min-width: 0; }
+.cap-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+.cap-title {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text);
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.cap-lede {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin: 0;
+}
+.cap-lede strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* The 4-capability list */
+.cap-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: linear-gradient(180deg, rgba(255,245,220,0.04), rgba(255,245,220,0.01));
+  border: 1px solid rgba(255, 238, 200, 0.08);
+  border-radius: 14px;
+}
+.cap-list li {
+  display: flex; gap: 9px;
+  padding: 9px 10px 9px 9px;
+  background: rgba(255, 245, 220, 0.02);
+  border: 1px solid rgba(255, 238, 200, 0.06);
+  border-radius: 9px;
+  align-items: flex-start;
+}
+.cap-num {
+  width: 20px; height: 20px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  background: rgba(212, 166, 106, 0.18);
+  border: 1px solid rgba(212, 166, 106, 0.32);
+  color: var(--primary);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.cap-h {
+  font-size: 12.5px;
+  color: var(--text);
+  font-weight: 600;
+  margin: 0 0 2px;
+  letter-spacing: 0;
+}
+.cap-d {
+  font-size: 11.5px;
+  color: var(--text-3);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* sample output card */
+.cap-sample {
+  background: linear-gradient(180deg, rgba(255,245,220,0.045), rgba(255,245,220,0.01));
+  border: 1px solid rgba(255, 238, 200, 0.09);
+  border-radius: 16px;
+  padding: 14px 14px 14px;
+  display: flex; flex-direction: column;
+  gap: 14px;
+  backdrop-filter: blur(12px) saturate(120%);
+}
+.cap-sample-head {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 0 2px 4px;
+  border-bottom: 1px dashed rgba(255, 238, 200, 0.1);
+  padding-bottom: 10px;
+}
+.cap-sample-tag {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.cap-sample-q {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--text);
+  line-height: 1.4;
+}
+.cap-sample-block { display: flex; flex-direction: column; gap: 8px; }
+.cap-sample-block h5 {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin: 0;
+  font-weight: 500;
+}
+.cap-sample-block h5 .dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.85;
+}
+.cap-sample-tldr {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  padding: 10px 12px;
+  background: rgba(212, 166, 106, 0.08);
+  border: 1px solid rgba(212, 166, 106, 0.22);
+  border-radius: 9px;
+}
+.cap-sample-tldr strong { color: var(--primary); font-weight: 600; }
+
+.cap-sample-checklist {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex; flex-direction: column;
+  gap: 5px;
+}
+.cap-sample-checklist li {
+  padding: 7px 10px;
+  background: rgba(255, 245, 220, 0.025);
+  border: 1px solid rgba(255, 238, 200, 0.07);
+  border-radius: 8px;
+  display: flex; flex-direction: column;
+  gap: 2px;
+}
+.cap-sample-checklist .cs-t {
+  font-size: 12.5px;
+  color: var(--text);
+  font-weight: 500;
+}
+.cap-sample-checklist .cs-d {
+  font-size: 11.5px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+
+.cap-sample-sources {
+  display: flex; flex-direction: column;
+  gap: 6px;
+}
+
+.cap-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 14px;
+  background: linear-gradient(180deg, #E1B473, #B68A4A);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  color: #1A1207;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  margin-top: 2px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 220, 0.25),
+    0 8px 16px -6px rgba(140, 90, 30, 0.5);
+  transition: filter .15s ease, transform .15s ease;
+}
+.cap-cta:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.cap-cta .arr {
+  font-family: var(--mono);
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+/* ---------- 9. SOURCE CARDS (used in capability panel + answer) */
+.src-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(255, 245, 220, 0.03);
+  border: 1px solid rgba(255, 238, 200, 0.09);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color .15s, background .15s, transform .15s;
+}
+.src-card:hover {
+  background: rgba(255, 245, 220, 0.06);
+  border-color: rgba(212, 166, 106, 0.32);
+  transform: translateY(-1px);
+}
+.src-card-kind {
+  flex-shrink: 0;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 3px 8px;
+  border-radius: 100px;
+  border: 1px solid;
+  align-self: flex-start;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+.src-kind-rule {
+  color: #E5BD80;
+  background: rgba(212, 166, 106, 0.12);
+  border-color: rgba(212, 166, 106, 0.32);
+}
+.src-kind-faq {
+  color: #A3CBAF;
+  background: rgba(143, 179, 154, 0.14);
+  border-color: rgba(143, 179, 154, 0.32);
+}
+.src-kind-scheme {
+  color: #CBD5E1;
+  background: rgba(203, 213, 225, 0.08);
+  border-color: rgba(203, 213, 225, 0.22);
+}
+.src-card-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.src-card-t {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.src-card-d {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-4);
+  letter-spacing: 0.01em;
+}
+.src-card-ext {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding-left: 4px;
+}
+.src-card:hover .src-card-ext { color: var(--primary); }
+
+/* Override old .sources block when sources-cards is applied */
+.sources.sources-cards { gap: 6px; }
+.sources.sources-cards a { padding: 0; border: none; background: transparent; }
+.sources.sources-cards a:hover { background: transparent; border: none; }
+
+/* ---------- 10. Tighter eyebrow text + foot pill --------- */
+.ws-eyebrow {
+  font-size: 10.5px !important;
+  letter-spacing: 0.04em;
+  padding: 5px 12px 5px 9px !important;
+}
+
+/* ---------- 11. Responsive — keep 3-col below 1280 -------- */
+@media (max-width: 1280px) {
+  .ws-kbcov-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 1100px) {
+  .cap-list { grid-template-columns: 1fr; }
+}
+
+/* ---------- 12. Tiny detail: panel body padding bump ----- */
+.ws-panel .panel-body { padding: 18px 18px 24px; }
+
+/* hide legacy empty state if it lingers */
+.ws-empty .ws-empty-orb,
+.ws-empty .ws-empty-tips { /* superseded by cap-panel; left intact for safety */ }

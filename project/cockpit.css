@@ -1,0 +1,498 @@
+/* =========================================================
+   COCKPIT — v3 immersive Agent Cockpit pass
+   Loaded LAST. Overrides workspace.css warm-glass where needed.
+   ========================================================= */
+
+/* ---------- 1. AMBIENT BACKGROUND (cockpit feel) ---------- */
+body.ws-body {
+  background:
+    radial-gradient(ellipse 60% 45% at 18% 18%, rgba(245, 158, 90, 0.11), transparent 65%),
+    radial-gradient(ellipse 55% 40% at 86% 22%, rgba(139, 140, 246, 0.10), transparent 62%),
+    radial-gradient(ellipse 70% 55% at 78% 92%, rgba(34, 197, 94, 0.07), transparent 65%),
+    radial-gradient(ellipse 55% 45% at 8% 88%, rgba(245, 158, 90, 0.08), transparent 60%),
+    linear-gradient(180deg, #11130F 0%, #0B0F12 55%, #0E100D 100%) !important;
+  background-attachment: fixed !important;
+}
+body.ws-body::before {
+  opacity: 0.35 !important;
+  mix-blend-mode: overlay !important;
+  background:
+    radial-gradient(ellipse 110% 70% at 50% 55%, transparent 0%, rgba(0,0,0,0.42) 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>") !important;
+}
+
+/* ---------- 2. THREE-COLUMN: more breathing room ---------- */
+.workspace {
+  padding: 20px !important;
+  column-gap: 18px !important;
+  grid-template-columns: 244px 1fr 408px !important;
+}
+
+/* ---------- 3. GLASS overrides — lighter, less warm ------- */
+.ws-sidebar,
+.ws-panel,
+.ws-cmd,
+.ws-quick-card,
+.kbcov-chip,
+.cap-list,
+.cap-sample {
+  background: rgba(255, 255, 255, 0.045) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  backdrop-filter: blur(24px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(130%) !important;
+}
+.ws-sidebar,
+.ws-panel {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 24px 80px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(0, 0, 0, 0.18) !important;
+  border-radius: 20px !important;
+}
+.ws-quick-card,
+.kbcov-chip {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 12px 28px -16px rgba(0, 0, 0, 0.45) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+.ws-quick-card:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  transform: translateY(-2px);
+}
+.ws-quick-card.is-start {
+  border-color: rgba(245, 158, 90, 0.36) !important;
+}
+.ws-quick-card.is-start::after {
+  background: linear-gradient(180deg, #F4B373, #D88F47);
+  color: #1A1207;
+}
+
+/* sidebar inner section dividers softer */
+.ws-sidebar .ws-section,
+.ws-sidebar .ws-brand,
+.ws-sidebar .ws-foot {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* identity buttons — softer, no heavy gradient */
+.ws-id {
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: transparent !important;
+  border-radius: 12px;
+}
+.ws-id:hover { background: rgba(255, 255, 255, 0.04) !important; }
+.ws-id.active {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+.ws-id.active .ws-id-icon {
+  background: rgba(245, 158, 90, 0.16);
+  border-color: rgba(245, 158, 90, 0.32);
+}
+.ws-id.active .ws-id-icon svg { stroke: #F4B373; }
+
+/* task list lighter selection */
+.ws-task.is-active {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.ws-task.is-active .num,
+.ws-task .badge {
+  color: #F4B373 !important;
+}
+.ws-task .badge {
+  background: rgba(245, 158, 90, 0.16) !important;
+  color: #F4B373 !important;
+  border: 1px solid rgba(245, 158, 90, 0.34);
+  font-weight: 500;
+}
+
+/* V0 pill — warm amber */
+.v0-pill {
+  background: rgba(245, 158, 90, 0.10) !important;
+  border-color: rgba(245, 158, 90, 0.30) !important;
+  color: #F4B373 !important;
+}
+.v0-pill .d { background: #F4B373 !important; box-shadow: 0 0 0 2px rgba(245,158,90,0.22); }
+
+/* ---------- 4. CENTER HERO — Orb above title ------------- */
+.ws-hero { text-align: center; }
+.ws-hero .ws-eyebrow,
+.ws-hero h1,
+.ws-hero .ws-lede { text-align: center; }
+.ws-hero h1 { white-space: normal !important; }
+.ws-hero .ws-lede { margin: 0 auto !important; }
+
+.ws-orb {
+  position: relative;
+  width: 88px; height: 88px;
+  margin: 0 auto 22px;
+  display: block;
+}
+.ws-orb .orb-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+.ws-orb .orb-ring-1 { inset: -8px; border-color: rgba(255, 255, 255, 0.06); }
+.ws-orb .orb-ring-2 { inset: 6px; border-color: rgba(245, 158, 90, 0.22); }
+.ws-orb .orb-core {
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 222, 180, 0.85) 0%, transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(139, 140, 246, 0.55) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, #E58D4A 0%, #B25A24 55%, #2A1A10 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 230, 200, 0.45),
+    inset 0 -8px 18px rgba(120, 50, 10, 0.55),
+    0 0 60px rgba(245, 158, 90, 0.30),
+    0 0 100px rgba(139, 140, 246, 0.16);
+  animation: orbBreath 5s ease-in-out infinite;
+}
+.ws-orb .orb-shine {
+  position: absolute;
+  top: 16px; left: 22px;
+  width: 26px; height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 245, 220, 0.55) 0%, transparent 70%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+@keyframes orbBreath {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50%      { transform: scale(1.04); filter: brightness(1.08); }
+}
+
+/* ---------- 5. TYPOGRAPHY contrast (recap) --------------- */
+.ws-body {
+  --text:   #F1F5F9;
+  --text-2: #CBD5E1;
+  --text-3: #94A3B8;
+  --text-4: #64748B;
+}
+.ws-hero h1 .accent {
+  background-image: linear-gradient(100deg, #F4B373 0%, #FCD9A8 35%, #B2A6F4 75%, #F4B373 100%) !important;
+  background-size: 200% 100% !important;
+}
+.ws-cmd-send {
+  background: linear-gradient(180deg, #9C9DF8, #6E70E0) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 8px 16px -6px rgba(80, 80, 200, 0.45) !important;
+}
+.ws-cmd-send svg { stroke: #FFFFFF !important; }
+.ws-cmd-send:hover { filter: brightness(1.08); }
+
+/* ---------- 6. RIGHT — Assistant History panel ----------- */
+#panelBody .asst-panel {
+  display: flex; flex-direction: column;
+  gap: 18px;
+  padding: 4px 4px 0;
+}
+.asst-head {
+  display: flex; flex-direction: column;
+  gap: 12px;
+}
+.asst-head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.asst-title-wrap { display: flex; flex-direction: column; gap: 4px; }
+.asst-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.asst-eyebrow .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #84CC16;
+  box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.18);
+}
+.asst-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.asst-search {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 12px;
+  color: var(--text-3);
+  transition: border-color .15s, background .15s;
+}
+.asst-search:focus-within {
+  border-color: rgba(245, 158, 90, 0.38);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-2);
+}
+.asst-search svg { width: 14px; height: 14px; flex-shrink: 0; }
+.asst-search input {
+  flex: 1; min-width: 0;
+  background: transparent;
+  border: none; outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+}
+.asst-search input::placeholder { color: var(--text-3); }
+.asst-search kbd {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  padding: 1px 6px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: var(--text-3);
+}
+
+.asst-section { display: flex; flex-direction: column; gap: 8px; }
+.asst-section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 0 2px;
+}
+.asst-section-head h5 {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+  margin: 0;
+}
+.asst-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-4);
+}
+
+.asst-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex; flex-direction: column;
+  gap: 6px;
+}
+.asst-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, transform .15s;
+}
+.asst-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+.asst-row-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #84CC16;
+  box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.16);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.asst-row-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.asst-row-t {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.asst-row-d {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-4);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+.asst-tag {
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(245, 158, 90, 0.12);
+  color: #F4B373;
+  border: 1px solid rgba(245, 158, 90, 0.26);
+  font-size: 9.5px;
+}
+.asst-row-arr {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+.asst-row:hover .asst-row-arr { color: #F4B373; }
+
+.asst-chips {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex; flex-direction: column;
+  gap: 6px;
+}
+.asst-chip {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px;
+  background: rgba(139, 140, 246, 0.06);
+  border: 1px solid rgba(139, 140, 246, 0.20);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.asst-chip:hover {
+  background: rgba(139, 140, 246, 0.12);
+  border-color: rgba(139, 140, 246, 0.36);
+}
+.asst-chip-kind {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #B2A6F4;
+  padding: 2px 7px;
+  background: rgba(139, 140, 246, 0.16);
+  border: 1px solid rgba(139, 140, 246, 0.32);
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+.asst-chip-t {
+  flex: 1; min-width: 0;
+  font-size: 12.5px;
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.asst-chip-arr {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+.asst-chip:hover .asst-chip-arr { color: #B2A6F4; }
+
+.asst-sources {
+  display: flex; flex-direction: column;
+  gap: 6px;
+}
+
+/* hide legacy cap-panel if it ever renders */
+.cap-panel { display: none !important; }
+
+/* ---------- 7. KB COVERAGE chip — accent rotation -------- */
+.kbcov-chip:nth-child(1) .kc-tag { color: #F4B373; }
+.kbcov-chip:nth-child(2) .kc-tag { color: #B2A6F4; }
+.kbcov-chip:nth-child(3) .kc-tag { color: #A3CBAF; }
+.kbcov-chip:nth-child(4) .kc-tag { color: #F4B373; }
+.kbcov-chip:nth-child(5) .kc-tag { color: #B2A6F4; }
+.kbcov-chip:nth-child(6) .kc-tag { color: #A3CBAF; }
+
+/* ---------- 8. WS-CMD input visual softening ------------- */
+.ws-cmd {
+  border-radius: 14px !important;
+  padding: 7px 7px 7px 16px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+.ws-cmd:focus-within {
+  border-color: rgba(245, 158, 90, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 4px rgba(245, 158, 90, 0.16) !important;
+}
+.ws-cmd-tag {
+  color: var(--text-3) !important;
+  border-right-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* ---------- 9. Footer text contrast --------------------- */
+.ws-main-foot, .ws-foot, .panel-foot { color: var(--text-3) !important; }
+.ws-values i { background: var(--text-4) !important; }
+
+/* ---------- 10. Crumb / panel head ---------------------- */
+.ws-panel .panel-head { border-bottom-color: rgba(255, 255, 255, 0.08) !important; }
+.ws-panel .panel-foot { border-top-color: rgba(255, 255, 255, 0.08) !important; }
+
+/* ---------- 11. Quick card desc weight ------------------ */
+.ws-quick-card .qc-desc { color: var(--text-2) !important; }
+.ws-quick-card .qc-num { color: #F4B373; }
+.ws-quick-card .qc-foot .arr { color: #F4B373; }
+.ws-quick-card.is-start::after { background: linear-gradient(180deg, #F4B373, #D88F47); color: #1A1207; }
+
+/* ---------- 12. KB list & section title -- a little softer */
+.ws-kb-list li {
+  border-radius: 8px;
+}
+.ws-kb-list .kb-dot { background: #F4B373; opacity: 0.85; }
+
+/* ---------- 13. Section title color clean --------------- */
+.ws-section-title { padding-top: 2px !important; }
+
+/* ---------- 14. Ans-block (per-task answer) glass refresh */
+.ws-panel .ans-block {
+  background: rgba(255, 255, 255, 0.035) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+.ws-panel .ans-block h4 .num {
+  background: rgba(245, 158, 90, 0.18);
+  border-color: rgba(245, 158, 90, 0.35);
+  color: #F4B373;
+}
+.ws-panel .ans-block h4 .num.teal {
+  background: rgba(132, 204, 22, 0.18);
+  border-color: rgba(132, 204, 22, 0.35);
+  color: #B6E26B;
+}
+.ws-panel .tldr {
+  background: rgba(245, 158, 90, 0.08) !important;
+  border-color: rgba(245, 158, 90, 0.24) !important;
+}
+.ws-panel .tldr strong { color: #F4B373; }
+.ws-panel .template-head .copy-btn {
+  background: linear-gradient(180deg, #F4B373, #D88F47);
+  color: #1A1207;
+}
+.ws-panel .template-head .copy-btn:hover { filter: brightness(1.06); }
+.ws-panel .template-head .copy-btn.copied {
+  background: linear-gradient(180deg, #B6E26B, #84CC16);
+  color: #14211A;
+}
+.ws-panel .template-head .label .who { color: #F4B373; }
+.ws-panel .template-body .var {
+  background: rgba(132, 204, 22, 0.16);
+  color: #B6E26B;
+  border-color: rgba(132, 204, 22, 0.32);
+}
+.ws-panel .panel-foot .dot { background: #84CC16; }
+
+/* Source kinds accent rebalanced */
+.src-kind-rule { color: #F4B373; background: rgba(245,158,90,0.12); border-color: rgba(245,158,90,0.32); }
+.src-kind-faq  { color: #B6E26B; background: rgba(132,204,22,0.12); border-color: rgba(132,204,22,0.30); }
+.src-kind-scheme { color: #B2A6F4; background: rgba(139,140,246,0.10); border-color: rgba(139,140,246,0.28); }
+
+/* ---------- 15. Hero h1 contrast ------------------------ */
+.ws-hero h1 { color: #F4F1EA; font-weight: 500; letter-spacing: -0.018em; }
+.ws-hero .ws-lede { color: var(--text-2); max-width: 48ch; }
+
+/* ---------- 16. Mobile fallback (already had base) ------ */
+@media (max-width: 1280px) {
+  .ws-orb { width: 76px; height: 76px; }
+}
