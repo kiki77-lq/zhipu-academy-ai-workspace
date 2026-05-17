@@ -36,6 +36,25 @@ This **IS**:
 - HTML
 - CSS
 - Vanilla JavaScript
+- React loaded via CDN for `tweaks.jsx` and `tweaks-panel.jsx` (visual theme tweaks only)
+
+**Entry HTML file:**
+`project/智谱书院 AI Portal.html`
+
+**Key JS files:**
+- `icons.js` — SVG icon definitions
+- `data.js` — Task data (visitor/student roles)
+- `workspace.js` — Core logic (role switch, task click, answer panel)
+- `app.js` — Additional app functionality
+- `tweaks.jsx` / `tweaks-panel.jsx` — React-based visual tweaks (non-core)
+
+**Key CSS files:**
+- `styles.css` — Global styles
+- `workspace.css` — Three-column layout
+- `panel.css` — Right panel styles
+- `cockpit.css` — **Contains Hero Orb** (`.ws-orb`, `.orb-ring`, `.orb-core`)
+- `tasks.css` — Task cards
+- `hero.css` — Hero section
 
 **Do NOT:**
 - Convert this project to React
@@ -161,7 +180,7 @@ The copy button should:
 - Video background
 - Strong glow
 - Game-like targeting UI
-- Complex orb / crystal ball / glowing sphere
+- **Hero Orb / glowing sphere** — Located in `cockpit.css` (`.ws-orb`, `.orb-ring`, `.orb-core`) and HTML lines 88-93
 
 If React Bits style is needed, only implement lightweight CSS/vanilla JS approximations. Do **NOT** import full React Bits components.
 
@@ -234,6 +253,18 @@ If the user says "do not change content", strictly **DO NOT** change:
 
 **Avoid modifying:**
 - `data.js` — unless explicitly asked
+
+---
+
+## Core Logic Locations
+
+**Role switching:** `workspace.js` — `bindIdentity()` function (lines 60-73)
+
+**Task click handling:** `workspace.js` — `openTask()` function (lines 76-82)
+
+**Answer panel rendering:** `workspace.js` — `renderAnswer()` (lines 200-286) and `showEmpty()` (lines 84-198)
+
+**Task data storage:** `data.js` — `window.TASKS` object with visitor (5 tasks) and student (5 tasks) roles
 
 ---
 
