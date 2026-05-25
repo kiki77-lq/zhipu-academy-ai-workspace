@@ -214,18 +214,30 @@
         <h4><span class="num ${numClass}">3</span>相关依据</h4>
         <div class="sources sources-cards">
           ${sources.map(s => {
-            const kindMap = { rule: "制度", doc: "制度", faq: "FAQ", book: "培养体系" };
-            const kindClass = { rule: "rule", doc: "rule", faq: "faq", book: "scheme" };
-            const kind = kindMap[s.icon] || "制度";
-            const kc = kindClass[s.icon] || "rule";
+            const typeMap   = { doc: "制度依据", rule: "管理规定", faq: "FAQ", book: "培养体系" };
+            const actionMap = { doc: "查看原文", rule: "查看规则", faq: "引用依据", book: "查看章节" };
+            const noteMap   = { doc: "制度文档引用", rule: "规章执行依据", faq: "FAQ 解答参考", book: "体系说明参考" };
+            const kindClass = { doc: "rule", rule: "rule", faq: "faq", book: "scheme" };
+            const kind   = typeMap[s.icon]   || "知识库";
+            const action = actionMap[s.icon] || "查看原文";
+            const note   = noteMap[s.icon]   || "相关制度片段";
+            const kc     = kindClass[s.icon] || "rule";
+            const path   = s.d || "飞书知识库 / 智谱书院";
+            const title  = s.t || "制度文档";
             return `
-              <a href="#" onclick="event.preventDefault()" class="src-card">
-                <span class="src-card-kind src-kind-${kc}">${kind}</span>
-                <span class="src-card-body">
-                  <span class="src-card-t">${s.t}</span>
-                  <span class="src-card-d">${s.d}</span>
-                </span>
-                <span class="src-card-ext">查看来源 ↗</span>
+              <a href="#" onclick="event.preventDefault()" class="src-card src-cite">
+                <div class="src-card-body">
+                  <div class="src-cite-top">
+                    <span class="src-card-kind src-kind-${kc}">${kind}</span>
+                    <p class="src-card-t">${title}</p>
+                  </div>
+                  <p class="src-cite-meta">
+                    <span class="src-cite-path">${path}</span>
+                    <span class="src-cite-sep" aria-hidden="true">·</span>
+                    <span class="src-cite-note">${note}</span>
+                  </p>
+                </div>
+                <span class="src-card-action">${action} ↗</span>
               </a>
             `;
           }).join("")}

@@ -399,6 +399,79 @@
   flex-shrink: 0;
 }
 
+/* ── Citation-style source cards ── */
+.src-cite {
+  align-items: flex-start;
+}
+
+.src-cite:hover {
+  border-color: var(--border-default);
+  background: var(--bg-surface-soft);
+}
+
+.src-cite .src-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.src-cite-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.src-cite-top .src-card-kind {
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.src-cite-top .src-card-t {
+  flex: 1;
+  min-width: 0;
+}
+
+.src-cite-meta {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding-left: 62px;
+}
+
+.src-cite-path {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.src-cite-sep {
+  color: var(--border-default);
+  font-size: 11px;
+}
+
+.src-cite-note {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  opacity: 0.75;
+}
+
+.src-card-action {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  margin-left: 10px;
+  padding-top: 1px;
+  transition: color 160ms;
+}
+
+.src-cite:hover .src-card-action {
+  color: var(--accent);
+}
+
 .template {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-subtle);
