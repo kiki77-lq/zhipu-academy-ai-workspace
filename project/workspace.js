@@ -130,115 +130,46 @@
     currentTaskId = null;
     syncActiveTaskState();
     $("#crumbTask").textContent = "Academy Assistant";
-    const role = currentRole === "student" ? "新同学" : "外部访客";
-    const recent = currentRole === "student"
-      ? [
-          { id: "s1", title: "入院第一周要做什么？", time: "刚刚", tag: "Onboarding" },
-          { id: "s3", title: "请假会影响补贴吗？",   time: "12 min", tag: "补贴" },
-          { id: "s4", title: "如何和 Mentor 沟通？", time: "1 h",   tag: "Mentor" }
-        ]
-      : [
-          { id: "v1", title: "书院是什么？",          time: "刚刚",  tag: "认知" },
-          { id: "v3", title: "培养体系如何设计？",     time: "8 min", tag: "体系" },
-          { id: "v5", title: "如何加入或关注后续信息？", time: "32 min", tag: "行动" }
-        ];
-    const suggest = currentRole === "student"
-      ? [
-          { id: "s5", title: "查看学员 FAQ · 找谁求助", kind: "FAQ" },
-          { id: "s4", title: "生成 Mentor 沟通模板",    kind: "模板" }
-        ]
-      : [
-          { id: "v2", title: "查看人才画像 · 是否适合",  kind: "FAQ" },
-          { id: "v4", title: "了解导师与研究方向",      kind: "体系" }
-        ];
-    const sources = [
-      { t: "学员 FAQ", d: "新同学频道置顶", k: "FAQ" },
-      { t: "出勤与请假规则", d: "制度文档 §3.2 / §4.1", k: "制度" },
-      { t: "Mentor 机制", d: "1:1 议程 + SLA", k: "机制" },
-      { t: "培养体系", d: "M1 / M2 / M3 / M4", k: "体系" }
-    ];
+
+    const three = tasks().slice(0, 3);
 
     $("#panelBody").innerHTML = `
-      <div class="asst-panel">
-        <header class="asst-head">
-          <div class="asst-head-row">
-            <div class="asst-title-wrap">
-              <span class="asst-eyebrow"><span class="dot"></span>${role} · 当前会话</span>
-              <h3 class="asst-title">Academy Assistant</h3>
-            </div>
-          </div>
-          <div class="asst-search">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input type="text" id="asstSearch" placeholder="搜索任务或直接提问…" autocomplete="off" />
-            <kbd>⏎</kbd>
-          </div>
-        </header>
+      <div class="ws-idle">
+        <div class="ws-idle-head">
+          <span class="ws-idle-status">
+            <span class="ws-idle-dot" aria-hidden="true"></span>等待任务
+          </span>
+          <h3 class="ws-idle-title">你可以从一个任务开始</h3>
+          <p class="ws-idle-desc">选择左侧或中间的任务，Academy AI 会把书院制度整理成可执行结果。</p>
+        </div>
 
-        <section class="asst-section">
-          <div class="asst-section-head">
-            <h5>Recent Tasks · 最近任务</h5>
-            <span class="asst-count">${recent.length}</span>
+        <div class="ws-idle-caps">
+          <p class="ws-idle-section-label">AI 将为你生成</p>
+          <div class="ws-idle-cap-list">
+            <div class="ws-idle-cap"><span class="ws-idle-cap-num">1</span>一句话结论</div>
+            <div class="ws-idle-cap"><span class="ws-idle-cap-num">2</span>行动清单</div>
+            <div class="ws-idle-cap"><span class="ws-idle-cap-num">3</span>来源依据</div>
+            <div class="ws-idle-cap"><span class="ws-idle-cap-num">4</span>可复制模板</div>
           </div>
-          <ul class="asst-list">
-            ${recent.map(r => `
-              <li class="asst-row" data-task-id="${r.id}">
-                <span class="asst-row-dot"></span>
-                <div class="asst-row-body">
-                  <p class="asst-row-t">${r.title}</p>
-                  <p class="asst-row-d"><span class="asst-tag">${r.tag}</span><span>${r.time} · 已生成结构化回答</span></p>
-                </div>
-                <span class="asst-row-arr">↗</span>
-              </li>
-            `).join("")}
-          </ul>
-        </section>
+        </div>
 
-        <section class="asst-section">
-          <div class="asst-section-head">
-            <h5>Suggested Next · 建议下一步</h5>
-          </div>
-          <ul class="asst-chips">
-            ${suggest.map(s => `
-              <li class="asst-chip" data-task-id="${s.id}">
-                <span class="asst-chip-kind">${s.kind}</span>
-                <span class="asst-chip-t">${s.title}</span>
-                <span class="asst-chip-arr">→</span>
-              </li>
-            `).join("")}
-          </ul>
-        </section>
-
-        <section class="asst-section">
-          <div class="asst-section-head">
-            <h5>Knowledge Sources · 知识来源</h5>
-            <span class="asst-count">${sources.length}</span>
-          </div>
-          <div class="asst-sources">
-            ${sources.map(s => `
-              <div class="src-card">
-                <span class="src-card-kind src-kind-${s.k === "制度" ? "rule" : s.k === "FAQ" ? "faq" : "scheme"}">${s.k}</span>
-                <div class="src-card-body">
-                  <p class="src-card-t">${s.t}</p>
-                  <p class="src-card-d">${s.d}</p>
-                </div>
-                <span class="src-card-ext">查看 ↗</span>
-              </div>
+        <div class="ws-idle-start">
+          <p class="ws-idle-section-label">推荐开始</p>
+          <div class="ws-idle-task-list">
+            ${three.map(t => `
+              <button class="ws-idle-task" type="button" data-task-id="${t.id}">
+                <span class="ws-idle-task-num">${t.num}</span>
+                <span class="ws-idle-task-title">${t.title}</span>
+                <span class="ws-idle-task-arr" aria-hidden="true">→</span>
+              </button>
             `).join("")}
           </div>
-        </section>
+        </div>
       </div>
     `;
-    $$("#panelBody .asst-row, #panelBody .asst-chip").forEach(el => {
-      el.addEventListener("click", () => openTask(el.dataset.taskId));
-    });
-    const asstSearch = document.getElementById("asstSearch");
-    asstSearch?.addEventListener("keydown", e => {
-      if (e.key !== "Enter") return;
-      const q = asstSearch.value.trim();
-      if (!q) return;
-      const all = tasks();
-      const found = all.find(t => q.includes(t.title.slice(0, 3)) || t.title.includes(q)) || all[0];
-      openTask(found.id);
+
+    $$(".ws-idle-task", $("#panelBody")).forEach(btn => {
+      btn.addEventListener("click", () => openTask(btn.dataset.taskId));
     });
   }
 

@@ -655,6 +655,153 @@
   flex-shrink: 0;
 }
 
+/* ── Idle / empty state ── */
+.ws-idle {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.ws-idle-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ws-idle-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ws-idle-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+
+.ws-idle-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  color: var(--text-primary);
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+}
+
+.ws-idle-desc {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+.ws-idle-section-label {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.ws-idle-cap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ws-idle-cap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-soft);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.ws-idle-cap-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ws-idle-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ws-idle-task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 160ms, background 160ms;
+}
+
+.ws-idle-task:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+
+.ws-idle-task-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--bg-surface-soft);
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ws-idle-task-title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+}
+
+.ws-idle-task-arr {
+  color: var(--text-muted);
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: color 160ms;
+}
+
+.ws-idle-task:hover .ws-idle-task-arr {
+  color: var(--accent);
+}
+
 @media (max-width: 1180px) {
   .ws-main {
     width: 320px;
@@ -667,7 +814,8 @@
   .ans-block,
   .section,
   .asst-head,
-  .asst-section {
+  .asst-section,
+  .ws-idle {
     padding-left: 24px;
     padding-right: 24px;
   }
