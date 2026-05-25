@@ -8,6 +8,20 @@
 
   function tasks() { return window.TASKS[currentRole]; }
 
+  const NEXT_TASK_MAP = {
+    v1: ["v2", "v3"], v2: ["v3", "v5"], v3: ["v4", "v5"],
+    v4: ["v5", "v1"], v5: ["v2", "v3"],
+    s1: ["s2", "s4"], s2: ["s3", "s4"], s3: ["s2", "s5"],
+    s4: ["s1", "s5"], s5: ["s1", "s4"]
+  };
+
+  function getNextTasks(id) {
+    const ids = NEXT_TASK_MAP[id] || [];
+    const all = tasks();
+    const found = ids.map(nid => all.find(t => t.id === nid)).filter(Boolean);
+    return found.length >= 2 ? found : all.slice(0, 2);
+  }
+
   function syncActiveTaskState() {
     $$(".ws-task").forEach(li => {
       const isActive = li.dataset.taskId === currentTaskId;
@@ -232,6 +246,7 @@
     const role = currentRole === "student" ? "新同学" : "外部访客";
     const numClass = currentRole === "student" ? "teal" : "";
     const { tldr, checklist, sources, template } = task;
+    const nextTasks = getNextTasks(task.id);
 
     $("#crumbTask").textContent = task.title;
     $("#panelBody").innerHTML = `
@@ -297,9 +312,26 @@
           <div class="template-body" id="templateBody">${template.body}</div>
         </div>
       </div>
+
+      <div class="ans-block">
+        <h4><span class="num ${numClass}">5</span>下一步建议</h4>
+        <p class="next-hint">完成当前任务后，建议继续推进：</p>
+        <div class="next-step-list">
+          ${nextTasks.map(nt => `
+            <button class="next-step-card" type="button" data-task-id="${nt.id}">
+              <span class="next-step-icon" aria-hidden="true">↗</span>
+              <span>${nt.title}</span>
+            </button>
+          `).join("")}
+        </div>
+      </div>
     `;
     const blocks = $$(".ans-block", $("#panelBody"));
     blocks.forEach((b, i) => setTimeout(() => b.classList.add("reveal"), 80 + i * 120));
+
+    $$(".next-step-card", $("#panelBody")).forEach(btn => {
+      btn.addEventListener("click", () => openTask(btn.dataset.taskId));
+    });
 
     $("#copyBtn")?.addEventListener("click", () => {
       const raw = $("#templateBody").innerText;
