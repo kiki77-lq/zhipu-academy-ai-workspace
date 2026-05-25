@@ -265,15 +265,17 @@
       <div class="ans-block">
         <h4><span class="num ${numClass}">2</span>行动清单</h4>
         <ol class="checklist">
-          ${checklist.map((c, i) => `
-            <li>
+          ${checklist.map((c, i) => {
+            const state = i === 0 ? "is-done" : i === 1 ? "is-current" : "is-pending";
+            return `
+            <li class="${state}">
               <span class="step">${String(i + 1).padStart(2, "0")}</span>
               <div class="body">
                 <p class="t">${c.t}</p>
                 <p class="d">${c.d}</p>
               </div>
-            </li>
-          `).join("")}
+            </li>`;
+          }).join("")}
         </ol>
       </div>
 

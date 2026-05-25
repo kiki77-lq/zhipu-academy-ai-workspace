@@ -179,31 +179,8 @@
 
 .checklist {
   list-style: none;
-  padding: 20px 0 0;
+  padding: 0;
   margin: 0;
-  position: relative;
-}
-
-.checklist::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--border-subtle);
-}
-
-.checklist::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 34%;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--accent);
 }
 
 .checklist li {
@@ -214,29 +191,106 @@
   padding: 10px 0;
 }
 
+/* Vertical connector line — gray by default */
 .checklist li:not(:last-child)::after {
   content: "";
   position: absolute;
   left: 10px;
-  top: 28px;
+  top: 32px;
   width: 2px;
-  height: calc(100% - 6px);
+  height: calc(100% - 12px);
   border-radius: 1px;
   background: var(--border-subtle);
 }
 
-.checklist li:nth-child(1)::after,
-.checklist li:nth-child(2)::after {
+/* Done → current segment: green */
+.checklist li.is-done:not(:last-child)::after {
   background: var(--accent);
 }
 
-.checklist li:nth-child(2) {
-  background: var(--accent-soft);
-  margin: 0 -32px;
-  padding: 12px 32px;
-  border-left: 3px solid var(--accent);
+/* ── DONE ── */
+.checklist li.is-done .step {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: transparent;
 }
 
+.checklist li.is-done .step::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.checklist li.is-done .t {
+  color: var(--text-muted);
+  font-weight: 500;
+  text-decoration: line-through;
+  text-decoration-color: var(--border-default);
+}
+
+.checklist li.is-done .d {
+  color: var(--text-muted);
+}
+
+/* ── CURRENT — full-width band via ::before, no margin hack ── */
+.checklist li.is-current {
+  isolation: isolate;
+  padding: 12px 0;
+}
+
+.checklist li.is-current::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  left: -32px;
+  right: -32px;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  z-index: -1;
+}
+
+.checklist li.is-current .step {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.checklist li.is-current .t {
+  color: var(--text-primary);
+  font-weight: 650;
+}
+
+.checklist li.is-current .d {
+  color: var(--text-secondary);
+}
+
+/* ── PENDING ── */
+.checklist li.is-pending .step {
+  background: var(--bg-surface);
+  border: 1.5px dashed var(--border-default);
+  color: var(--text-muted);
+}
+
+.checklist li.is-pending .t {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.checklist li.is-pending .d {
+  color: var(--text-muted);
+}
+
+.checklist li.is-pending:hover .t {
+  color: var(--text-primary);
+}
+
+/* ── Base step circle ── */
 .checklist .step {
   width: 22px;
   height: 22px;
@@ -253,30 +307,6 @@
   position: relative;
 }
 
-.checklist li:nth-child(1) .step {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: transparent;
-}
-
-.checklist li:nth-child(1) .step::after {
-  content: "✓";
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.checklist li:nth-child(2) .step {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #FFFFFF;
-}
-
 .checklist .body {
   min-width: 0;
   flex: 1;
@@ -288,11 +318,6 @@
   font-size: 13px;
   font-weight: 600;
   line-height: 1.5;
-}
-
-.checklist li:nth-child(1) .t {
-  color: var(--text-muted);
-  text-decoration: line-through;
 }
 
 .checklist .d {
@@ -647,10 +672,8 @@
     padding-right: 24px;
   }
 
-  .checklist li:nth-child(2) {
-    margin-left: -24px;
-    margin-right: -24px;
-    padding-left: 24px;
-    padding-right: 24px;
+  .checklist li.is-current::before {
+    left: -24px;
+    right: -24px;
   }
 }
