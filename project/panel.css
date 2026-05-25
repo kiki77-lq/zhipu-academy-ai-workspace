@@ -181,6 +181,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .checklist li {
@@ -188,30 +189,42 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 10px 0;
+  padding: 10px 12px 10px 0;
+  min-height: 72px;
+  border-radius: var(--radius-lg);
+  transition: background-color 0.12s ease, border-color 0.12s ease;
 }
 
-/* Vertical connector line — gray by default */
+.checklist li:hover {
+  background: var(--bg-surface-soft);
+}
+
 .checklist li:not(:last-child)::after {
   content: "";
   position: absolute;
   left: 10px;
-  top: 32px;
+  top: 28px;
   width: 2px;
-  height: calc(100% - 12px);
+  height: calc(100% - 8px);
   border-radius: 1px;
+  background: #D9DED5;
+}
+
+.checklist li.is-done:not(:last-child)::after {
+  background: rgba(31, 143, 95, 0.55);
+}
+
+.checklist li.is-current:not(:last-child)::after {
+  background: rgba(31, 143, 95, 0.28);
+}
+
+.checklist li.is-pending:not(:last-child)::after {
   background: var(--border-subtle);
 }
 
-/* Done → current segment: green */
-.checklist li.is-done:not(:last-child)::after {
-  background: var(--accent);
-}
-
-/* ── DONE ── */
 .checklist li.is-done .step {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: #2A9667;
+  border-color: #2A9667;
   color: transparent;
 }
 
@@ -227,32 +240,32 @@
   font-weight: 700;
 }
 
+.checklist li.is-done {
+  background: #FCFDFC;
+}
+
 .checklist li.is-done .t {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-weight: 500;
-  text-decoration: line-through;
-  text-decoration-color: var(--border-default);
 }
 
 .checklist li.is-done .d {
   color: var(--text-muted);
 }
 
-/* ── CURRENT — full-width band via ::before, no margin hack ── */
 .checklist li.is-current {
   isolation: isolate;
-  padding: 12px 0;
+  padding: 12px 12px 12px 0;
+  background: var(--bg-accent-soft);
+  border: 1px solid var(--accent-border);
 }
 
 .checklist li.is-current::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  left: -32px;
-  right: -32px;
-  background: var(--accent-soft);
-  border-left: 3px solid var(--accent);
-  z-index: -1;
+  content: none;
+}
+
+.checklist li.is-current::after {
+  left: 13px;
 }
 
 .checklist li.is-current .step {
@@ -270,11 +283,14 @@
   color: var(--text-secondary);
 }
 
-/* ── PENDING ── */
 .checklist li.is-pending .step {
   background: var(--bg-surface);
-  border: 1.5px dashed var(--border-default);
+  border: 1.5px solid var(--border-default);
   color: var(--text-muted);
+}
+
+.checklist li.is-pending {
+  background: var(--bg-surface);
 }
 
 .checklist li.is-pending .t {
@@ -286,11 +302,11 @@
   color: var(--text-muted);
 }
 
-.checklist li.is-pending:hover .t {
-  color: var(--text-primary);
+.checklist li.is-pending:hover .t,
+.checklist li.is-pending:hover .d {
+  color: var(--text-secondary);
 }
 
-/* ── Base step circle ── */
 .checklist .step {
   width: 22px;
   height: 22px;
@@ -310,6 +326,7 @@
 .checklist .body {
   min-width: 0;
   flex: 1;
+  padding-top: 1px;
 }
 
 .checklist .t {
@@ -317,14 +334,14 @@
   color: var(--text-primary);
   font-size: 13px;
   font-weight: 600;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .checklist .d {
   margin: 0;
   color: var(--text-secondary);
   font-size: 12.5px;
-  line-height: 1.65;
+  line-height: 1.58;
 }
 
 .sources,
