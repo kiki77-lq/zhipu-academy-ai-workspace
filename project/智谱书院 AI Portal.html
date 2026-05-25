@@ -4,126 +4,109 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>智谱书院 AI Portal · Workspace</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
-<link rel="stylesheet" href="panel.css" />
-<link rel="stylesheet" href="themes.css" />
 <link rel="stylesheet" href="workspace.css" />
-<link rel="stylesheet" href="refine.css" />
-<link rel="stylesheet" href="cockpit.css" />
-<link rel="stylesheet" href="polish.css" />
+<link rel="stylesheet" href="panel.css" />
 </head>
 <body class="ws-body">
 
-<div class="workspace">
+<div class="workspace shell">
 
-  <!-- ===== Sidebar (260) ===== -->
-  <aside class="ws-sidebar">
+  <aside class="ws-sidebar sidebar">
     <div class="ws-brand">
-      <img class="ws-brand-mark" src="assets/zai-dark.svg" alt="Zhipu Academy" />
+      <div class="ws-brand-mark" aria-hidden="true">Z</div>
       <div class="ws-brand-name">
         <span class="zh">智谱书院</span>
-        <span class="en">Zhipu Academy · AI Portal</span>
+        <span class="en">Academy AI</span>
       </div>
     </div>
 
-    <div class="ws-section ws-section-identity">
-      <h6 class="ws-section-title">
-        <span>身份模式</span>
-        <span class="ws-section-hint">Identity</span>
-      </h6>
-      <div class="ws-identity">
-        <button class="ws-id active" data-role="visitor">
-          <span class="ws-id-icon" data-icon="visitor"></span>
-          <span class="ws-id-text">
-            <span class="t">我想了解书院</span>
-            <span class="s">外部访客</span>
-          </span>
-          <kbd>1</kbd>
-        </button>
-        <button class="ws-id" data-role="student">
-          <span class="ws-id-icon" data-icon="student"></span>
-          <span class="ws-id-text">
-            <span class="t">我是新加入的同学</span>
-            <span class="s">新同学 Onboarding</span>
-          </span>
-          <kbd>2</kbd>
-        </button>
+    <div class="ws-sidebar-main">
+      <nav class="ws-nav" aria-label="主导航">
+        <a class="ws-nav-item is-active" href="#" onclick="event.preventDefault()">
+          <span class="ws-nav-icon" aria-hidden="true">⌂</span>
+          <span>首页</span>
+        </a>
+        <div class="ws-nav-item is-disabled">
+          <span class="ws-nav-icon" aria-hidden="true">▣</span>
+          <span>课程模块</span>
+          <span class="ws-nav-soon">soon</span>
+        </div>
+        <div class="ws-nav-item is-disabled">
+          <span class="ws-nav-icon" aria-hidden="true">◔</span>
+          <span>我的进度</span>
+          <span class="ws-nav-soon">soon</span>
+        </div>
+        <div class="ws-nav-item is-disabled">
+          <span class="ws-nav-icon" aria-hidden="true">☰</span>
+          <span>模板库</span>
+          <span class="ws-nav-soon">soon</span>
+        </div>
+      </nav>
+
+      <section class="ws-kb">
+        <div class="ws-kb-head">
+          <span class="ws-kb-label">KNOWLEDGE BASE</span>
+          <span class="ws-kb-arrow" aria-hidden="true">▾</span>
+        </div>
+        <ul class="ws-kb-list">
+          <li><span class="kb-doc" aria-hidden="true">▤</span><span class="kb-name">书院总览</span><small>12</small></li>
+          <li><span class="kb-doc" aria-hidden="true">▤</span><span class="kb-name">培养体系</span><small>8</small></li>
+          <li><span class="kb-doc" aria-hidden="true">▤</span><span class="kb-name">联培手册</span><small>15</small></li>
+          <li><span class="kb-doc" aria-hidden="true">▤</span><span class="kb-name">课程体系</span><small>6</small></li>
+          <li><span class="kb-doc" aria-hidden="true">▤</span><span class="kb-name">考核标准</span><small>4</small></li>
+        </ul>
+        <p class="ws-kb-meta">5 份文档 · 3000+ 行</p>
+      </section>
+    </div>
+
+    <div class="ws-user">
+      <div class="ws-user-avatar" aria-hidden="true">刘</div>
+      <div class="ws-user-copy">
+        <span class="ws-user-name">2026级联培生</span>
+        <span class="ws-user-meta">先修 · 第3周</span>
       </div>
-    </div>
-
-    <div class="ws-section ws-tasks-section">
-      <h6 class="ws-section-title">
-        <span id="wsTaskLabel">推荐任务 · 外部访客</span>
-        <span class="ws-count" id="wsTaskCount">05</span>
-      </h6>
-      <ul class="ws-task-list" id="wsTaskList"></ul>
-    </div>
-
-    <div class="ws-section ws-kb">
-      <h6 class="ws-section-title">
-        <span>知识来源</span>
-        <span class="ws-section-hint">Knowledge Base</span>
-      </h6>
-      <ul class="ws-kb-list">
-        <li><span class="kb-dot"></span><span class="kb-name">书院总览</span><small>制度 · 总则</small></li>
-        <li><span class="kb-dot"></span><span class="kb-name">培养体系</span><small>M1 / M2 / M3 / M4</small></li>
-        <li><span class="kb-dot"></span><span class="kb-name">学员 FAQ</span><small>新同学频道置顶</small></li>
-        <li><span class="kb-dot"></span><span class="kb-name">Mentor 机制</span><small>1:1 + 议程模板</small></li>
-      </ul>
-    </div>
-
-    <div class="ws-foot">
-      <span class="v0-pill"><span class="d"></span>V0 演示版</span>
-      <span class="v0-sub">© 2026 Zhipu Academy</span>
     </div>
   </aside>
 
-  <!-- ===== Main column ===== -->
-  <main class="ws-main">
+  <main class="ws-main center">
     <div class="ws-main-inner">
       <header class="ws-hero">
-        <span class="ws-eyebrow"><span class="dot"></span>Academy Assistant · Mock KB Ready · 知识库原型就绪</span>
-        <h1>培养 AGI 时代的<span class="accent">定义者</span></h1>
+        <h1>培养 AGI 时代的定义者</h1>
         <p class="ws-lede">AI 助手为你解读书院制度，生成可执行的行动清单。</p>
       </header>
 
-      <div class="ws-cmd">
+      <div class="section-label">ASK ACADEMY AI</div>
+      <div class="ws-cmd search-box">
         <span class="ws-cmd-tag">Ask Academy AI</span>
         <input id="aiInput" type="text" placeholder="或者直接问我：培养体系、入院流程、打卡补贴、导师沟通……" autocomplete="off" />
         <kbd class="ws-cmd-key">⏎</kbd>
         <button class="ws-cmd-send" aria-label="发送">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#0D0F14"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
       </div>
 
-      <div class="ws-quick">
-        <div class="ws-quick-head">
-          <h3>快捷任务</h3>
-          <span class="ws-quick-sub" id="wsQuickSub">外部访客 · 最常打开的 4 个</span>
+      <section class="ws-launcher">
+        <div class="ws-launcher-head">
+          <div>
+            <div class="section-label">TASK LAUNCHER</div>
+            <h2 class="ws-launcher-title" id="wsTaskLabel">推荐任务 · 外部访客</h2>
+          </div>
+          <span class="ws-count" id="wsTaskCount">05</span>
         </div>
+        <ul class="ws-task-list" id="wsTaskList"></ul>
+      </section>
+
+      <div class="ws-quick" hidden aria-hidden="true">
+        <span class="ws-quick-sub" id="wsQuickSub">外部访客 · 最常打开的 4 个</span>
         <div class="ws-quick-grid" id="wsQuickGrid"></div>
       </div>
-
-      <section class="ws-kbcov" hidden></section>
-
-      <footer class="ws-main-foot">
-        <span>V0 演示内容 · 基于书院制度与 FAQ 的结构化知识库 Mock</span>
-        <span class="ws-values">
-          <span>人品正</span><i></i><span>硬算法</span><i></i><span>可复现</span><i></i><span>求完备</span>
-        </span>
-      </footer>
     </div>
   </main>
 
-  <!-- ===== Answer Panel (right, 420) ===== -->
-  <aside class="ws-panel" id="panel">
+  <aside class="ws-panel panel answer-panel" id="panel">
     <div class="panel-head">
       <div class="crumb">
-        <span>AI Portal</span>
-        <span class="slash">/</span>
         <span id="crumbRole">外部访客</span>
         <span class="slash">/</span>
         <b id="crumbTask">Academy Assistant</b>
@@ -137,13 +120,25 @@
 
     <div class="panel-body" id="panelBody"></div>
 
-    <div class="panel-foot">
-      <span class="left"><span class="dot"></span>V0 演示内容 · 基于书院制度与 FAQ 的结构化知识库 Mock</span>
-      <div class="right">
-        <button class="ghost">👍</button>
-        <button class="ghost">👎</button>
+    <section class="panel-next section">
+      <div class="section-header">
+        <span class="section-num">5</span>
+        <div>
+          <h3 class="section-title">下一步建议</h3>
+          <p class="section-note">继续推进当前回答后的动作</p>
+        </div>
       </div>
-    </div>
+      <div class="next-step-list">
+        <button class="next-step-card" type="button">
+          <span class="next-step-icon" aria-hidden="true">↗</span>
+          <span>复制模板后发给同学或 Mentor</span>
+        </button>
+        <button class="next-step-card" type="button">
+          <span class="next-step-icon" aria-hidden="true">↗</span>
+          <span>切换左侧任务，继续生成下一类回答</span>
+        </button>
+      </div>
+    </section>
   </aside>
 
 </div>
@@ -151,11 +146,5 @@
 <script src="icons.js"></script>
 <script src="data.js"></script>
 <script src="workspace.js"></script>
-
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="tweaks.jsx"></script>
 </body>
 </html>
