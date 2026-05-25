@@ -8,12 +8,32 @@
 
   function tasks() { return window.TASKS[currentRole]; }
 
+  function syncActiveTaskState() {
+    $$(".ws-task").forEach(li => {
+      const isActive = li.dataset.taskId === currentTaskId;
+      li.classList.toggle("is-active", isActive);
+      li.setAttribute("aria-current", isActive ? "true" : "false");
+    });
+
+    $$(".ws-quick-card").forEach(card => {
+      const isActive = card.dataset.taskId === currentTaskId;
+      card.classList.toggle("is-active", isActive);
+      card.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+  }
+
   // -------- Sidebar task list --------
   function renderTaskList() {
     const list = $("#wsTaskList");
     const t = tasks();
     list.innerHTML = t.map((task, i) => `
-      <li class="ws-task ${task.id === currentTaskId ? "is-active" : ""}" data-task-id="${task.id}">
+      <li
+        class="ws-task ${task.id === currentTaskId ? "is-active" : ""}"
+        data-task-id="${task.id}"
+        role="button"
+        tabindex="0"
+        aria-current="${task.id === currentTaskId ? "true" : "false"}"
+      >
         <span class="num">${task.num}</span>
         <div class="body">
           <p class="t">${task.title}</p>
@@ -23,7 +43,13 @@
       </li>
     `).join("");
     list.querySelectorAll(".ws-task").forEach(li => {
-      li.addEventListener("click", () => openTask(li.dataset.taskId));
+      const activate = () => openTask(li.dataset.taskId);
+      li.addEventListener("click", activate);
+      li.addEventListener("keydown", e => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        e.preventDefault();
+        activate();
+      });
     });
     $("#wsTaskLabel").textContent =
       currentRole === "student" ? "推荐任务 · 新同学" : "推荐任务 · 外部访客";
@@ -36,7 +62,12 @@
     const grid = $("#wsQuickGrid");
     const four = tasks().slice(0, 4);
     grid.innerHTML = four.map((t, i) => `
-      <button class="ws-quick-card ${i === 0 ? "is-start" : ""}" data-task-id="${t.id}">
+      <button
+        class="ws-quick-card ${i === 0 ? "is-start" : ""} ${t.id === currentTaskId ? "is-active" : ""}"
+        data-task-id="${t.id}"
+        type="button"
+        aria-pressed="${t.id === currentTaskId ? "true" : "false"}"
+      >
         <div class="qc-head">
           <span class="qc-num">${t.num} / 05</span>
           <span>${t.meta[1]}</span>
@@ -44,7 +75,7 @@
         <h4 class="qc-title">${t.title}</h4>
         <p class="qc-desc">${t.desc}</p>
         <div class="qc-foot">
-          <span>${t.meta[0]}</span>
+          <span class="qc-meta">${t.meta[0]}</span>
           <span class="arr">生成回答 →</span>
         </div>
       </button>
@@ -77,13 +108,13 @@
     const task = tasks().find(t => t.id === id);
     if (!task) return;
     currentTaskId = id;
-    $$(".ws-task").forEach(li => li.classList.toggle("is-active", li.dataset.taskId === id));
+    syncActiveTaskState();
     renderAnswer(task);
   }
 
   function showEmpty() {
     currentTaskId = null;
-    $$(".ws-task").forEach(li => li.classList.remove("is-active"));
+    syncActiveTaskState();
     $("#crumbTask").textContent = "Academy Assistant";
     const role = currentRole === "student" ? "新同学" : "外部访客";
     const recent = currentRole === "student"
