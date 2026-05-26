@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>智谱书院 AI Portal · Workspace</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="workspace.css" />
+<link rel="stylesheet" href="panel.css" />
+</head>
+<body class="ws-body">
+
+<div class="workspace shell">
+
+  <aside class="ws-sidebar sidebar">
+    <div class="ws-brand">
+      <div class="ws-brand-mark">
+        <img src="assets/zai-light.svg" alt="智谱书院" />
+      </div>
+      <div class="ws-brand-name">
+        <span class="zh">智谱书院</span>
+        <span class="en">Academy AI</span>
+      </div>
+    </div>
+
+    <div class="ws-sidebar-main">
+      <nav class="ws-nav" aria-label="主导航">
+        <a class="ws-nav-item is-active" href="#" onclick="event.preventDefault()">
+          <span class="ws-nav-icon" data-icon="student" aria-hidden="true"></span>
+          <span>首页</span>
+        </a>
+        <div class="ws-nav-item is-disabled">
+          <span class="ws-nav-icon" data-icon="book" aria-hidden="true"></span>
+          <span>课程模块</span>
+          <span class="ws-nav-soon">soon</span>
+        </div>
+        <div class="ws-nav-item is-disabled">
+          <span class="ws-nav-icon" data-icon="clock" aria-hidden="true"></span>
+          <span>我的进度</span>
+          <span class="ws-nav-soon">soon</span>
+        </div>
+        <div class="ws-nav-item is-disabled">
+          <span class="ws-nav-icon" data-icon="doc" aria-hidden="true"></span>
+          <span>模板库</span>
+          <span class="ws-nav-soon">soon</span>
+        </div>
+      </nav>
+
+      <section class="ws-kb">
+        <div class="ws-kb-head">
+          <span class="ws-kb-label">知识来源</span>
+          <span class="ws-kb-arrow" aria-hidden="true">▾</span>
+        </div>
+        <ul class="ws-kb-list">
+          <li><span class="kb-doc" data-icon="doc" aria-hidden="true"></span><span class="kb-name">书院总览</span><small>12</small></li>
+          <li><span class="kb-doc" data-icon="book" aria-hidden="true"></span><span class="kb-name">培养体系</span><small>8</small></li>
+          <li><span class="kb-doc" data-icon="doc" aria-hidden="true"></span><span class="kb-name">联培手册</span><small>15</small></li>
+          <li><span class="kb-doc" data-icon="book" aria-hidden="true"></span><span class="kb-name">课程体系</span><small>6</small></li>
+          <li><span class="kb-doc" data-icon="rule" aria-hidden="true"></span><span class="kb-name">考核标准</span><small>4</small></li>
+        </ul>
+        <p class="ws-kb-meta">5 份文档 · 3000+ 行</p>
+      </section>
+    </div>
+
+    <div class="ws-user">
+      <div class="ws-user-avatar" aria-hidden="true">刘</div>
+      <div class="ws-user-copy">
+        <span class="ws-user-name">2026级联培生</span>
+        <span class="ws-user-meta">先修 · 第3周</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="ws-main center">
+    <div class="ws-main-inner">
+      <header class="ws-hero">
+        <h1>新同学 AI 工作台</h1>
+        <p class="ws-lede">选择一个任务，AI 会整理依据、步骤和可复制模板。</p>
+      </header>
+
+      <div class="section-label">提问</div>
+      <div class="ws-cmd search-box">
+        <span class="ws-cmd-tag">Ask Academy AI</span>
+        <input id="aiInput" type="text" placeholder="或者直接问我：培养体系、入院流程、打卡补贴、导师沟通……" autocomplete="off" />
+        <kbd class="ws-cmd-key">⏎</kbd>
+        <button class="ws-cmd-send" aria-label="发送">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <section class="ws-launcher">
+        <div class="ws-launcher-head">
+          <div>
+            <div class="section-label">推荐任务</div>
+            <h2 class="ws-launcher-title" id="wsTaskLabel">推荐任务 · 新同学</h2>
+          </div>
+          <span class="ws-count" id="wsTaskCount">05</span>
+        </div>
+        <ul class="ws-task-list" id="wsTaskList"></ul>
+      </section>
+
+      <div class="ws-quick" hidden aria-hidden="true">
+        <span class="ws-quick-sub" id="wsQuickSub">外部访客 · 最常打开的 4 个</span>
+        <div class="ws-quick-grid" id="wsQuickGrid"></div>
+      </div>
+    </div>
+  </main>
+
+  <aside class="ws-panel panel answer-panel" id="panel">
+    <div class="panel-head">
+      <div class="crumb">
+        <span id="crumbRole">新同学</span>
+        <span class="slash">/</span>
+        <b id="crumbTask">Academy Assistant</b>
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="panelClear" title="清空">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-body" id="panelBody"></div>
+  </aside>
+
+</div>
+
+<script src="icons.js"></script>
+<script src="data.js"></script>
+<script src="workspace.js"></script>
+</body>
+</html>
