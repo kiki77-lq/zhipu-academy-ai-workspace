@@ -150,6 +150,7 @@
             <div class="ws-idle-cap"><span class="ws-idle-cap-num">2</span>行动清单</div>
             <div class="ws-idle-cap"><span class="ws-idle-cap-num">3</span>来源依据</div>
             <div class="ws-idle-cap"><span class="ws-idle-cap-num">4</span>可复制模板</div>
+            <div class="ws-idle-cap"><span class="ws-idle-cap-num">5</span>下一步建议</div>
           </div>
         </div>
 
