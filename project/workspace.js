@@ -178,6 +178,9 @@
     const numClass = currentRole === "student" ? "teal" : "";
     const { tldr, checklist, sources, template } = task;
     const nextTasks = getNextTasks(task.id);
+    const checklistTotal = checklist.length;
+    const checklistDone = checklistTotal > 0 ? 1 : 0;
+    const checklistProgress = checklistTotal > 0 ? Math.round((checklistDone / checklistTotal) * 100) : 0;
 
     $("#crumbTask").textContent = task.title;
     $("#panelBody").innerHTML = `
@@ -195,6 +198,15 @@
 
       <div class="ans-block">
         <h4><span class="num ${numClass}">2</span>行动清单</h4>
+        <div class="check-progress" aria-label="行动清单进度">
+          <div class="check-progress-meta">
+            <span>已完成 ${checklistDone} / ${checklistTotal}</span>
+            <span>${checklistProgress}%</span>
+          </div>
+          <div class="check-progress-bar" aria-hidden="true">
+            <span class="check-progress-fill" style="width: ${checklistProgress}%"></span>
+          </div>
+        </div>
         <ol class="checklist">
           ${checklist.map((c, i) => {
             const state = i === 0 ? "is-done" : i === 1 ? "is-current" : "is-pending";
