@@ -438,7 +438,7 @@
 }
 
 .ws-task::after {
-  content: "生成 →";
+  content: "→";
   position: absolute;
   right: 12px;
   bottom: 10px;
