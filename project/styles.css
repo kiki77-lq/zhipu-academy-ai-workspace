@@ -1,23 +1,23 @@
 :root {
-  --bg-page: #F7F7F5;
-  --bg-sidebar: #F0F1EE;
+  --bg-page: #F7F7F6;
+  --bg-sidebar: #F1F1EF;
   --bg-surface: #FFFFFF;
-  --bg-surface-soft: #FAFAF8;
-  --bg-accent-soft: rgba(47, 125, 92, 0.07);
+  --bg-surface-soft: #FAFAF9;
+  --bg-accent-soft: rgba(40, 110, 82, 0.055);
 
-  --border-subtle: rgba(30, 35, 30, 0.08);
-  --border-default: rgba(30, 35, 30, 0.12);
-  --border-strong: rgba(30, 35, 30, 0.18);
+  --border-subtle: rgba(28, 31, 29, 0.075);
+  --border-default: rgba(28, 31, 29, 0.11);
+  --border-strong: rgba(28, 31, 29, 0.18);
 
-  --text-primary: #202421;
-  --text-secondary: #5F665F;
-  --text-muted: #888F87;
-  --text-disabled: #AEB4AC;
+  --text-primary: #1F2321;
+  --text-secondary: #5D635F;
+  --text-muted: #858B86;
+  --text-disabled: #ADB2AE;
 
-  --accent: #34785E;
-  --accent-hover: #28664E;
-  --accent-soft: rgba(47, 125, 92, 0.08);
-  --accent-border: rgba(47, 125, 92, 0.20);
+  --accent: #3A745E;
+  --accent-hover: #2D604C;
+  --accent-soft: rgba(58, 116, 94, 0.075);
+  --accent-border: rgba(58, 116, 94, 0.18);
 
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.04);

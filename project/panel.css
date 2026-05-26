@@ -141,8 +141,9 @@
   width: 20px;
   height: 20px;
   border-radius: var(--radius-md);
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--bg-surface-soft);
+  color: var(--text-secondary);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -167,12 +168,12 @@
 .tldr {
   padding: 15px 16px;
   border-radius: var(--radius-xl);
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-border);
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--border-subtle);
   border-left: 3px solid var(--accent);
   font-size: 14px;
   line-height: 1.7;
-  color: #0D5C3B;
+  color: var(--text-primary);
 }
 
 .tldr p {
@@ -288,8 +289,8 @@
 .checklist li.is-current {
   isolation: isolate;
   padding: 12px 12px 12px 0;
-  background: var(--bg-accent-soft);
-  border: 1px solid var(--accent-border);
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--border-default);
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
@@ -587,8 +588,9 @@
   display: inline-block;
   padding: 1px 6px;
   border-radius: var(--radius-sm);
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--bg-surface-soft);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
 }
 
 .section {
@@ -604,14 +606,15 @@
   padding: 11px 14px;
   border-radius: var(--radius-xl);
   background: var(--bg-surface);
-  border: 1px solid var(--accent-border);
+  border: 1px solid var(--border-subtle);
   font-size: 13px;
   color: var(--text-primary);
   cursor: pointer;
 }
 
 .next-step-card:hover {
-  background: var(--accent-soft);
+  background: var(--bg-surface-soft);
+  border-color: var(--border-default);
 }
 
 .next-step-icon {
@@ -857,8 +860,9 @@
   width: 20px;
   height: 20px;
   border-radius: 5px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -890,8 +894,8 @@
 }
 
 .ws-idle-task:hover {
-  border-color: var(--accent-border);
-  background: var(--bg-accent-soft);
+  border-color: var(--border-default);
+  background: var(--bg-surface-soft);
 }
 
 .ws-idle-task-num {
