@@ -3,7 +3,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-  let currentRole = "visitor";
+  let currentRole = "student";
   let currentTaskId = null;
 
   function tasks() { return window.TASKS[currentRole]; }
