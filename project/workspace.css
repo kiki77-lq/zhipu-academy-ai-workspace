@@ -105,7 +105,8 @@
   text-align: center;
   color: var(--text-muted);
   flex-shrink: 0;
-  opacity: 0.72;
+  opacity: 0.5;
+  font-size: 13px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -308,10 +309,7 @@
 }
 
 .ws-cmd-tag {
-  color: var(--text-muted);
-  font-size: 12px;
-  white-space: nowrap;
-  flex-shrink: 0;
+  display: none;
 }
 
 .ws-cmd input {
@@ -343,7 +341,7 @@
   height: 28px;
   border: none;
   border-radius: var(--radius-lg);
-  background: var(--accent);
+  background: #1C1F1D;
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -353,7 +351,7 @@
 }
 
 .ws-cmd-send:hover {
-  background: var(--accent-hover);
+  background: #2D3230;
 }
 
 .ws-cmd-send svg {
@@ -374,11 +372,7 @@
 }
 
 .ws-launcher-head::after {
-  content: "直接提问，或选择任务生成右侧 AI 行动流";
-  width: 100%;
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.5;
+  content: none;
 }
 
 .ws-launcher-title {
@@ -460,7 +454,7 @@
 }
 
 .ws-task.is-active::before {
-  background: var(--accent);
+  background: #1C1F1D;
 }
 
 .ws-task.is-active::after {
@@ -469,11 +463,7 @@
 }
 
 .ws-task .num {
-  min-width: 20px;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 650;
-  padding-top: 1px;
+  display: none;
 }
 
 .ws-task:hover .num,
@@ -531,6 +521,9 @@
 .ws-eyebrow,
 .accent,
 .v0-pill,
-.v0-sub {
+.v0-sub,
+.floating-btn,
+.floating-action-button,
+.chat-widget {
   display: none !important;
 }
