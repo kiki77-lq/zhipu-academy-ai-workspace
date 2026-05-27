@@ -1,371 +1,233 @@
-# 智谱书院 AI Workspace / Zhipu Academy AI Workspace
+# 智谱书院 AI Workspace — CLAUDE.md
 
-## Current Highest Priority
+## Current Priority
 
-**This week's goal:** Build a clickable, animated, demo-ready AI Native Workspace.
+**Stage:** Demo complete → Deploy + Portfolio packaging
 
-The priority is **NOT**:
-- Static UI refinement
-- Visual exploration or new design directions
-- Rebuilding the project
+The project has finished visual development. Do NOT:
+- Explore new visual directions
+- Do major UI redesigns
+- Add new features
 
-The priority **IS**:
-- Implementing the full interaction chain: **Role → Task → Answer → Action**
-- Making the workspace screen-recordable as a demo
-- Ensuring all interactions feel complete and responsive
+Only allowed changes:
+- Bug fixes
+- Minor spacing/alignment tweaks (max 30 min)
+- Content text corrections in data.js (only if factually wrong)
+- Deployment configuration
+- Documentation updates
 
 ---
 
-## Project Positioning
+## Product Definition
 
-**Project Name:** 智谱书院 AI Workspace / Zhipu Academy AI Workspace
+**Product Name:** 智谱书院 AI Workspace (Zhipu Academy AI Workspace)
 
-This is **NOT**:
-- A traditional website
-- A pure chatbot
+**One-line:** A student-facing AI workspace that turns scattered Feishu policy documents into structured, actionable answers.
 
-This **IS**:
-- An AI Native workspace for external visitors and new students
-- A task-based structured AI assistant that turns scattered Feishu documents, rules, FAQ, onboarding flows, and training-system information into actionable guidance
+**This IS:**
+- An AI Native workspace for student onboarding
+- A task-based structured assistant (not a chatbot)
+- A single-role product: student only
+
+**This is NOT:**
+- A website or landing page
+- A chatbot or conversational UI
+- A multi-role product (visitor role exists in data.js but is NOT active in the UI)
+- A course platform or LMS
+- A dashboard with charts
+
+**Core Interaction Chain:**
+```
+Student Context → Task → Answer → Action
+```
+Student enters workspace → selects a task → right panel shows structured AI answer → student follows checklist, checks sources, copies template, sees next steps.
+
+**AI Output Structure (5 sections):**
+1. One-sentence summary (一句话结论)
+2. Action checklist with progress (行动清单)
+3. Source citations with document references (来源依据)
+4. Copyable template text (可复制模板)
+5. Next step suggestions linking to other tasks (下一步建议)
 
 ---
 
 ## Tech Stack
 
-**Current Stack:**
-- HTML
-- CSS
-- Vanilla JavaScript
-- React loaded via CDN for `tweaks.jsx` and `tweaks-panel.jsx` (visual theme tweaks only)
+- HTML / CSS / Vanilla JavaScript
+- No framework, no build system, no bundler
+- React loaded via CDN only for `tweaks.jsx` and `tweaks-panel.jsx` (visual theme overlay, non-core)
 
-**Entry HTML file:**
-`project/智谱书院 AI Portal.html`
-
-**Key JS files:**
-- `icons.js` — SVG icon definitions
-- `data.js` — Task data (visitor/student roles)
-- `workspace.js` — Core logic (role switch, task click, answer panel)
-- `app.js` — Additional app functionality
-- `tweaks.jsx` / `tweaks-panel.jsx` — React-based visual tweaks (non-core)
-
-**Key CSS files:**
-- `styles.css` — Global styles
-- `workspace.css` — Three-column layout
-- `panel.css` — Right panel styles
-- `cockpit.css` — **Contains Hero Orb** (`.ws-orb`, `.orb-ring`, `.orb-core`)
-- `tasks.css` — Task cards
-- `hero.css` — Hero section
+**Entry file:** `project/智谱书院 AI Portal.html`
 
 **Do NOT:**
-- Convert this project to React
-- Add Vite
-- Add TypeScript
-- Add Tailwind
-- Add GSAP
-- Add three.js or WebGL
-- Add a package.json or new build system unless explicitly requested
-- Connect real APIs
-- Connect Feishu knowledge base yet
+- Convert to React / Vue / Svelte
+- Add Vite, Webpack, or any bundler
+- Add TypeScript or Tailwind
+- Add GSAP, three.js, or WebGL
+- Add package.json or npm dependencies (unless for deployment only)
+- Connect real APIs or Feishu
 
 ---
 
-## Page Structure to Preserve
+## File Map
 
-Keep the current three-column Agent Workspace layout:
+### Core files (modify these)
+| File | Purpose |
+|------|---------|
+| `project/styles.css` | CSS variables (colors, spacing, radius, shadows) |
+| `project/workspace.css` | Three-column layout, sidebar, task launcher, responsive |
+| `project/panel.css` | Right Answer Panel styles |
+| `project/workspace.js` | Core logic: task click, answer render, copy, reveal animation |
+| `project/data.js` | Task content for both roles (visitor + student) |
+| `project/icons.js` | SVG icon definitions |
 
-```
-┌─────────────┬──────────────────────────┬──────────────────┐
-│             │                          │                  │
-│   Left      │      Center Main         │   Right Panel    │
-│   Sidebar   │                          │                  │
-│             │  - Hero title            │  - Structured    │
-│  - Brand    │  - Ask Academy AI input  │    answer        │
-│  - Identity │  - Quick task cards      │  - Action        │
-│  - Tasks    │  - Task launcher area    │    checklist     │
-│  - Sources  │                          │  - Related       │
-│             │                          │    sources       │
-│             │                          │  - Copyable      │
-│             │                          │    template      │
-│             │                          │                  │
-└─────────────┴──────────────────────────┴──────────────────┘
-```
+### Secondary files (avoid modifying unless needed)
+| File | Purpose |
+|------|---------|
+| `project/tasks.css` | Task card specific styles |
+| `project/hero.css` | Center area header styles |
+| `project/polish.css` | Visual polish overrides |
+| `project/refine.css` | Additional refinement overrides |
+| `project/extras.css` | Extra style tweaks |
+| `project/themes.css` | Theme variables |
+| `project/footer.css` | Footer styles |
 
-Do **NOT** rebuild the page into a website, chatbot, or new dashboard.
+### Legacy files (do not use, may contain dead code)
+| File | Purpose |
+|------|---------|
+| `project/cockpit.css` | Old Hero Orb / glowing sphere — NOT USED |
+| `project/tweaks.jsx` | React visual tweaks overlay — non-core |
+| `project/tweaks-panel.jsx` | React panel tweaks — non-core |
+| `project/app.js` | Legacy app logic — mostly superseded by workspace.js |
 
----
-
-## Demo Interactions Required This Week
-
-### A. Role Switching
-
-Clicking "我想了解书院" or "我是新加入的同学" should:
-
-- Switch active role state
-- Update sidebar task list
-- Update center task cards
-- Update right panel default state or default task
-- Use light fade + translateY animation (duration: ~240ms)
-
-### B. Task Selection
-
-Clicking a sidebar task or center task card should:
-
-- Set active task
-- Sync sidebar and center active states
-- Update the right Answer Panel
-- Use light transition, not hard switching
-
-### C. Answer Panel Stagger Reveal
-
-The right panel answer should reveal blocks in order:
-
-1. One-sentence conclusion
-2. Action checklist
-3. Related sources
-4. Copyable template
-
-**Animation specs:**
-```css
-opacity: 0 → 1
-transform: translateY(8px) → 0
-duration: 240–360ms
-delay: 80–120ms between blocks
-```
-
-### D. Ask Academy AI Input
-
-The input should behave like a command input:
-
-- Focus: border highlight + soft box-shadow
-- Focus: show suggested question chips
-- Chips come from existing tasks
-- Clicking a chip triggers the related task
-- Hide chips after blur with short delay
-
-### E. Copy Template
-
-The copy button should:
-
-- Copy the current template text
-- Show "已复制"
-- Restore to "复制" after 1.5 seconds
-- Show lightweight toast (bottom-right OR inside right panel)
-- **Never** cover the hero title
+### Assets
+| Path | Purpose |
+|------|---------|
+| `project/assets/zai-dark.svg` | Brand logo (dark version) |
+| `project/assets/zai-light.svg` | Brand logo (light version) |
+| `project/uploads/` | Screenshot references — do not modify |
 
 ---
 
-## Allowed Motion
+## Page Structure
 
-**Allowed:**
-- Task card hover: `translateY(-2px)`
-- Active card subtle highlight
-- Source card hover
-- Input focus glow
-- Answer panel stagger reveal
-- Role switch fade
-- Chip hover
-- Copy success toast
-- Lightweight CSS focus brackets (task cards / source cards / role cards only)
+```
+┌──────────┬─────────────────┬──────────────────────────────┐
+│ Sidebar  │ Task Launcher   │ AI Action Panel              │
+│ 200px    │ ~360px          │ flex: 1 (primary area)       │
+│          │                 │                              │
+│ - Brand  │ - Title         │ - Question title             │
+│ - Nav    │ - Description   │ - Meta (role, time, sources) │
+│   (soon) │ - Search input  │ - § 1 Summary                │
+│ - KB     │ - Task list ×5  │ - § 2 Action checklist       │
+│   sources│                 │ - § 3 Source citations        │
+│ - User   │                 │ - § 4 Copy template          │
+│          │                 │ - § 5 Next steps             │
+└──────────┴─────────────────┴──────────────────────────────┘
+```
+
+**Weight ratio:** 15% / 30% / 55% — right panel is the visual and functional hero.
+
+---
+
+## Visual Direction
+
+**Style:** Light-mode precision tool (Linear / Raycast inspired)
+
+**Current CSS tokens** (in `styles.css`):
+- Page background: `#FAFAF7` (warm off-white)
+- Sidebar: `#F4F5F1`
+- Surface: `#FFFFFF`
+- Text: `#1F241F` → `#5F685E` → `#8A9288` → `#B6BDB3`
+- Accent: `#1F8F5F` (muted green, status only)
+- Border: `#E6E8E1` / `#DADDD3`
+
+**Design principles:**
+- Green is status color only (progress, checkmarks, active indicators)
+- Minimal borders — use background color difference instead
+- Typography hierarchy through size and weight, not color
+- Right panel should feel like a document, not a settings page
+- Task launcher should feel like a command palette, not a table
 
 **Forbidden:**
-- ShapeBlur WebGL
-- PixelTrail
-- three.js
-- GSAP
-- Full TargetCursor
-- Custom mouse cursor
-- Hiding default cursor
-- Particles
-- 3D scenes
-- Video background
-- Strong glow
-- Game-like targeting UI
-- **Hero Orb / glowing sphere** — Located in `cockpit.css` (`.ws-orb`, `.orb-ring`, `.orb-core`) and HTML lines 88-93
-
-If React Bits style is needed, only implement lightweight CSS/vanilla JS approximations. Do **NOT** import full React Bits components.
+- Dark mode / dark backgrounds
+- Purple, blue, or bright gradients
+- Glowing effects, particles, WebGL
+- Glass morphism
+- Hero Orb (legacy, in cockpit.css — do not re-enable)
+- Game-like UI or targeting elements
+- Large decorative elements
 
 ---
 
-## UI Refinement Priorities
+## Core Logic Reference
 
-When refining UI, prioritize:
+**Role state:** `workspace.js` line 6 — `currentRole = "student"` (hardcoded)
 
-1. Reduce visual crowding
-2. Unify typography system
-3. Improve spacing
-4. Improve right panel readability
-5. Prevent text overflow
-6. Prevent source card tag collision
-7. Reduce overuse of purple glow
-8. Make sidebar feel like navigation, not a document
+**Task rendering:** `renderTaskList()` — generates sidebar task list from `window.TASKS[currentRole]`
 
-### Typography Guide
+**Task click:** `openTask(id)` — sets `currentTaskId`, calls `renderAnswer()`, syncs active states
 
-| Element | Size | Font-weight | Line-height |
-|---------|------|-------------|-------------|
-| Hero title | 48–56px | — | 1.12 |
-| Section title | 18px | 600 | — |
-| Task card title | 16px | 600 | — |
-| Panel title | 22–24px | 600 | — |
-| Panel block title | 14px | 600 | — |
-| Body text | 13–14px | — | 1.6–1.7 |
-| Meta / label | 11–12px | — | — |
-| Source tag | 11px | — | — |
+**Answer rendering:** `renderAnswer()` (lines ~200-286) — builds the 5-section structured output
 
-### Spacing Guide
+**Empty/idle state:** `showEmpty()` (lines ~84-198) — shows welcome state when no task selected
 
-- Task card grid gap: `16px`
-- Task card padding: `20px 24px`
-- Sidebar section gap: `20–24px`
-- Panel block gap: `16–20px`
-- Hero title to subtitle gap: `14–16px`
-- Subtitle to input gap: `24–28px`
-- Input to task section gap: `36–40px`
+**Copy template:** Inside `renderAnswer()` — clipboard API + "已复制" feedback
+
+**Stagger reveal:** Answer sections animate in sequence (80ms base + 120ms stagger)
+
+**Data structure:** `data.js` exports `window.TASKS` with two keys: `visitor` (5 tasks) and `student` (5 tasks). Each task has: `id`, `num`, `title`, `desc`, `tag`, `tagColor`, `time`, `answer` object.
 
 ---
 
-## Content Protection Rules
+## Content Rules
 
-If the user says "do not change content", strictly **DO NOT** change:
+**Do NOT modify** unless explicitly asked:
+- Task titles and descriptions in `data.js`
+- Answer panel content (summaries, checklists, citations, templates)
+- Source document references
+- Template text
 
-- Task titles
-- Task descriptions
-- Answer Panel content
-- Copyable template text
-- Source text
-- `data.js` content
-
-**Only modify:**
-- Classes
-- Layout
-- CSS
+**Can modify:**
+- CSS classes and styles
+- HTML structure (if needed for layout)
 - JS interaction logic
-- DOM rendering structure
+- DOM rendering approach
 
 ---
 
-## Preferred Files to Modify
+## Interaction Checklist
 
-**Prefer modifying:**
-- `workspace.js` — role switching, task click, active state, answer panel updates, copy button, input chips
-- `workspace.css` — layout, hover, active state, reveal animation, input focus, source cards, toast, spacing
-- `styles.css` — global tokens, colors, typography, base styles
-
-**Avoid modifying:**
-- `data.js` — unless explicitly asked
-
----
-
-## Core Logic Locations
-
-**Role switching:** `workspace.js` — `bindIdentity()` function (lines 60-73)
-
-**Task click handling:** `workspace.js` — `openTask()` function (lines 76-82)
-
-**Answer panel rendering:** `workspace.js` — `renderAnswer()` (lines 200-286) and `showEmpty()` (lines 84-198)
-
-**Task data storage:** `data.js` — `window.TASKS` object with visitor (5 tasks) and student (5 tasks) roles
+These interactions must work at all times:
+- [ ] Clicking a sidebar task updates the right panel
+- [ ] Active task shows visual indicator (highlight / left border)
+- [ ] Answer panel sections stagger-reveal on task switch
+- [ ] Checklist items show done/current/pending states
+- [ ] Progress bar reflects completion percentage
+- [ ] Copy button copies template text and shows "已复制"
+- [ ] Source citations show document title, section, and type tag
+- [ ] Next step suggestions are clickable and switch to that task
+- [ ] Search input has focus state with border highlight
+- [ ] Sidebar "soon" items are visible but not interactive
 
 ---
 
-## Before Any Change
+## Deployment
 
-Before editing, check:
+**Target:** Vercel (static site)
 
-- [ ] Does the page open normally?
-- [ ] Does task click work?
-- [ ] Does the right panel render correctly?
-- [ ] Are there high-risk effects leftovers?
-- [ ] Does this task require content changes?
+**Requirements:**
+- `vercel.json` in project root with `"outputDirectory": "project"`
+- `project/index.html` — copy of `智谱书院 AI Portal.html` (avoids URL encoding issues)
+- No build step needed
 
 ---
 
 ## After Every Change
 
-Always report:
-
-1. Files modified
-2. Interactions added or fixed
-3. Whether any content text was changed
-4. Whether any dependency was added
-5. How to verify in browser
-6. Remaining risks
-
----
-
-## Current Forbidden Actions
-
-**Do NOT:**
-- Explore new visual directions
-- Rebuild the page
-- Turn it into a website
-- Turn it into a pure chatbot
-- Convert to React
-- Connect API
-- Connect Feishu
-- Add complex animation libraries
-- Add WebGL
-- Add full React Bits code
-- Add avatars or robot icons
-- Let decorative effects overpower product interaction
-
-**Current stage ONLY allows:**
-- Clickable interactions
-- Product-level micro-interactions
-- Typography and spacing refinement
-- Demo-ready experience
-
----
-
-## Skills Usage Rules
-
-### 1. General Principles
-
-- **Do NOT use skills just because they are installed.** Only use a skill when the task explicitly requires it.
-- **Always explain WHY a skill is needed** before invoking it.
-- **If no suitable skill exists**, execute the task directly according to CLAUDE.md rules—do NOT force a skill call.
-
-### 2. When to Use Skills
-
-Only use skills when the task explicitly involves:
-
-- **UI / Frontend Design:** Web design, interface design, visual hierarchy, component design
-- **Accessibility:** A11y audit, screen reader testing, keyboard navigation
-- **AI Product Design:** AI-native UX patterns, conversational UI, agent workflows
-- **Frontend Debug:** Console errors, JavaScript debugging, performance issues
-- **Documentation:** README, API docs, inline code comments
-
-### 3. Preferred Skill Categories
-
-For this project, prioritize these types of skills:
-
-```
-✓ UI / frontend design / web design
-✓ accessibility audit
-✓ AI product / AI-native product design
-✓ frontend debug / console debug / JavaScript debug
-✓ documentation / README
-```
-
-### 4. Forbidden Skills
-
-Do NOT use skills unrelated to this project:
-
-```
-✗ Legal / compliance
-✗ Offensive security / penetration testing
-✗ Advertising / marketing automation
-✗ CRM automation
-✗ Financial trading / fintech
-✗ External system automation (outside this project)
-```
-
-### 5. Pre-Invocation Checklist
-
-Before calling any skill, ask:
-
-1. Is this skill directly relevant to the current task?
-2. Does the task require specialized capabilities beyond core reasoning?
-3. Can I explain why this specific skill is needed?
-
-If the answer to any question is "NO", do NOT use the skill.
+Report:
+1. Which files were modified
+2. Whether any data.js content was changed (should be NO)
+3. Whether any dependency was added (should be NO)
+4. How to verify in browser
+5. Any remaining issues
