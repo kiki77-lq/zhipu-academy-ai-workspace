@@ -309,6 +309,10 @@
   // -------- AI input → match top result --------
   function bindInput() {
     const input = $("#aiInput");
+    if (!input) {
+      console.warn("[Workspace] #aiInput not found");
+      return;
+    }
     let i = 0, charIdx = 0, phase = "type";
     function tick() {
       if (document.activeElement === input) {
@@ -333,16 +337,38 @@
     }
     tick();
 
+    function handleAskInput() {
+      const q = input.value.trim();
+      console.log("[Workspace] input submit:", q);
+      if (!q) return;
+
+      const all = tasks();
+      const found = all.find(t => q.includes(t.title.slice(0, 4)));
+
+      if (found) {
+        openTask(found.id);
+      } else if (window.Chatbot?.start) {
+        console.log("[Workspace] fallback to chatbot:", q);
+        currentTaskId = null;
+        syncActiveTaskState();
+        window.Chatbot.start(q);
+      } else {
+        console.warn("[Workspace] window.Chatbot undefined");
+      }
+
+      input.value = "";
+    }
+
     input.addEventListener("keydown", e => {
       if (e.key !== "Enter") return;
-      const q = input.value.trim();
-      if (!q) return;
-      // naive match: pick the task whose title best matches
-      const all = tasks();
-      const found = all.find(t => q.includes(t.title.slice(0, 4))) || all[0];
-      openTask(found.id);
-      input.value = "";
+      e.preventDefault();
+      handleAskInput();
     });
+
+    const sendBtn = $(".ws-cmd-send");
+    if (sendBtn) {
+      sendBtn.addEventListener("click", handleAskInput);
+    }
   }
 
   function bindKeys() {
@@ -352,7 +378,10 @@
       if (e.key === "2") $$(".ws-id")[1]?.click();
       if (e.key === "Escape") showEmpty();
     });
-    $("#panelClear")?.addEventListener("click", showEmpty);
+    $("#panelClear")?.addEventListener("click", () => {
+      if (window.Chatbot?.clear) window.Chatbot.clear();
+      showEmpty();
+    });
   }
 
   document.addEventListener("DOMContentLoaded", () => {
