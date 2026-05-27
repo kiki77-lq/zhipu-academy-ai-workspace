@@ -1,4 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "outputDirectory": "project"
+  "outputDirectory": "project",
+  "functions": {
+    "api/chat.js": {
+      "maxDuration": 30
+    }
+  }
 }
