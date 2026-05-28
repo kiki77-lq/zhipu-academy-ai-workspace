@@ -130,48 +130,7 @@
     currentTaskId = null;
     syncActiveTaskState();
     $("#crumbTask").textContent = "Academy Assistant";
-
-    const three = tasks().slice(0, 3);
-
-    $("#panelBody").innerHTML = `
-      <div class="ws-idle">
-        <div class="ws-idle-head">
-          <span class="ws-idle-status">
-            <span class="ws-idle-dot" aria-hidden="true"></span>等待任务
-          </span>
-          <h3 class="ws-idle-title">你可以从一个任务开始</h3>
-          <p class="ws-idle-desc">选择左侧或中间的任务，Academy AI 会把书院制度整理成可执行结果。</p>
-        </div>
-
-        <div class="ws-idle-caps">
-          <p class="ws-idle-section-label">AI 将为你生成</p>
-          <div class="ws-idle-cap-list">
-            <div class="ws-idle-cap"><span class="ws-idle-cap-num">1</span>一句话结论</div>
-            <div class="ws-idle-cap"><span class="ws-idle-cap-num">2</span>行动清单</div>
-            <div class="ws-idle-cap"><span class="ws-idle-cap-num">3</span>来源依据</div>
-            <div class="ws-idle-cap"><span class="ws-idle-cap-num">4</span>可复制模板</div>
-            <div class="ws-idle-cap"><span class="ws-idle-cap-num">5</span>下一步建议</div>
-          </div>
-        </div>
-
-        <div class="ws-idle-start">
-          <p class="ws-idle-section-label">推荐开始</p>
-          <div class="ws-idle-task-list">
-            ${three.map(t => `
-              <button class="ws-idle-task" type="button" data-task-id="${t.id}">
-                <span class="ws-idle-task-num">${t.num}</span>
-                <span class="ws-idle-task-title">${t.title}</span>
-                <span class="ws-idle-task-arr" aria-hidden="true">→</span>
-              </button>
-            `).join("")}
-          </div>
-        </div>
-      </div>
-    `;
-
-    $$(".ws-idle-task", $("#panelBody")).forEach(btn => {
-      btn.addEventListener("click", () => openTask(btn.dataset.taskId));
-    });
+    window.Chatbot?.show();
   }
 
   function renderAnswer(task) {

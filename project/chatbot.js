@@ -104,6 +104,117 @@ window.Chatbot = (function () {
       .replace(/\n/g, '<br>');
   }
 
+  function renderComposer(disabled = false) {
+    return `
+      <div class="chat-input-bar">
+        <input type="text" id="chatFollowUp" placeholder="试试问：${randomPlaceholder()}" ${disabled ? 'disabled' : ''} autocomplete="off" />
+        <button id="chatSendBtn" ${disabled ? 'disabled' : ''} aria-label="发送">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>`;
+  }
+
+  function bindComposer(root) {
+    const input = $('#chatFollowUp', root);
+    const sendBtn = $('#chatSendBtn', root);
+    if (input) {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          const q = input.value.trim();
+          if (q && !isStreaming) send(q);
+        }
+      });
+      if (!isStreaming) setTimeout(() => input.focus(), 50);
+    }
+    if (sendBtn) {
+      sendBtn.addEventListener('click', () => {
+        const q = input?.value.trim();
+        if (q && !isStreaming) send(q);
+      });
+    }
+  }
+
+  function showIdle() {
+    const pb = panelBody();
+    if (!pb) return;
+    messages = [];
+    reasoningStep = -1;
+    reasoningTimers.forEach(t => clearTimeout(t));
+    reasoningTimers = [];
+
+    pb.innerHTML = `
+      <div class="chat-container">
+        <div class="chat-messages chat-messages-idle" id="chatMessages">
+          <section class="chat-idle-shell" aria-label="Academy AI 空闲态">
+            <div class="chat-idle-kicker">
+              <span class="chat-idle-dot" aria-hidden="true"></span>
+              <span>Academy AI Ready</span>
+            </div>
+
+            <div class="chat-idle-head">
+              <h2 class="chat-idle-title">Academy AI 会为你整理</h2>
+              <p class="chat-idle-desc">选择一个任务，或直接提问。Academy AI 会结合书院知识库，为你整理结论、步骤、依据和可复制模板。</p>
+            </div>
+
+            <div class="chat-capability-grid" aria-label="结构化输出能力">
+              <article class="chat-capability-card">
+                <span class="chat-capability-mark">01</span>
+                <h3 class="chat-capability-title">一句话结论</h3>
+                <p class="chat-capability-desc">先给出明确判断，避免反复翻制度。</p>
+              </article>
+              <article class="chat-capability-card">
+                <span class="chat-capability-mark">02</span>
+                <h3 class="chat-capability-title">行动清单</h3>
+                <p class="chat-capability-desc">把流程拆成可执行步骤，知道下一步做什么。</p>
+              </article>
+              <article class="chat-capability-card">
+                <span class="chat-capability-mark">03</span>
+                <h3 class="chat-capability-title">来源依据</h3>
+                <p class="chat-capability-desc">标注书院知识库来源，方便核对规则口径。</p>
+              </article>
+              <article class="chat-capability-card">
+                <span class="chat-capability-mark">04</span>
+                <h3 class="chat-capability-title">可复制模板</h3>
+                <p class="chat-capability-desc">生成请假、沟通、周报等可直接复用的文本。</p>
+              </article>
+            </div>
+
+            <div class="chat-suggestion-section">
+              <h3 class="chat-suggestion-title">你可以这样开始</h3>
+              <div class="chat-suggestion-grid">
+                <button class="chat-suggestion-card" type="button" data-question="入院第一周要做什么？">
+                  <span class="chat-suggestion-card-title">入院第一周要做什么？</span>
+                  <span class="chat-suggestion-card-desc">查看 Day 1 到 Day 7 的关键动作。</span>
+                </button>
+                <button class="chat-suggestion-card" type="button" data-question="请假会影响补贴吗？">
+                  <span class="chat-suggestion-card-title">请假会影响补贴吗？</span>
+                  <span class="chat-suggestion-card-desc">理解请假、出勤与津贴之间的关系。</span>
+                </button>
+                <button class="chat-suggestion-card" type="button" data-question="如何和 Mentor 沟通？">
+                  <span class="chat-suggestion-card-title">如何和 Mentor 沟通？</span>
+                  <span class="chat-suggestion-card-desc">获取 1:1 频率、议程模板和卡点求助方式。</span>
+                </button>
+                <button class="chat-suggestion-card" type="button" data-question="出勤打卡怎么处理？">
+                  <span class="chat-suggestion-card-title">出勤打卡怎么处理？</span>
+                  <span class="chat-suggestion-card-desc">查看每日打卡、补卡和远程办公边界。</span>
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+        ${renderComposer(false)}
+      </div>`;
+
+    pb.querySelectorAll('.chat-suggestion-card').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.dataset.question;
+        if (q && !isStreaming) send(q);
+      });
+    });
+    bindComposer(pb);
+  }
+
   // ---- Update reasoning step classes without full re-render ----
   function updateReasoning() {
     const container = document.querySelector('.chat-reasoning');
@@ -122,32 +233,7 @@ window.Chatbot = (function () {
 
     // Welcome state — no messages yet
     if (messages.length === 0) {
-      pb.innerHTML = `
-        <div class="chat-container">
-          <div class="chat-messages" id="chatMessages">
-            <div class="chat-welcome">
-              <div class="chat-welcome-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
-                </svg>
-              </div>
-              <div class="chat-welcome-title">Hi，我是书院 AI 助手</div>
-              <div class="chat-welcome-desc">我可以帮你查询入院、请假、补贴、Mentor 沟通等问题</div>
-              <div class="chat-suggestions">
-                <button class="chat-suggestion-btn" data-question="请假会影响补贴吗？">请假会影响补贴吗？</button>
-                <button class="chat-suggestion-btn" data-question="入院第一周要做什么？">入院第一周该做什么？</button>
-                <button class="chat-suggestion-btn" data-question="如何和 Mentor 沟通？">怎么和 Mentor 沟通？</button>
-                <button class="chat-suggestion-btn" data-question="出勤打卡规则是什么？">出勤打卡规则是什么？</button>
-              </div>
-            </div>
-          </div>
-        </div>`;
-      pb.querySelectorAll('.chat-suggestion-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const q = btn.dataset.question;
-          if (q && !isStreaming) send(q);
-        });
-      });
+      showIdle();
       return;
     }
 
@@ -206,12 +292,7 @@ window.Chatbot = (function () {
           ${msgsHTML}
           ${typingHTML}
         </div>
-        <div class="chat-input-bar">
-          <input type="text" id="chatFollowUp" placeholder="试试问：${randomPlaceholder()}" ${isStreaming ? 'disabled' : ''} autocomplete="off" />
-          <button id="chatSendBtn" ${isStreaming ? 'disabled' : ''} aria-label="发送">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
-        </div>
+        ${renderComposer(isStreaming)}
       </div>`;
 
     // Restore reasoning step classes after re-render
@@ -221,25 +302,7 @@ window.Chatbot = (function () {
     const msgBox = $('#chatMessages');
     if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
 
-    // Bind follow-up input
-    const input = $('#chatFollowUp');
-    const sendBtn = $('#chatSendBtn');
-    if (input) {
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          const q = input.value.trim();
-          if (q && !isStreaming) send(q);
-        }
-      });
-      if (!isStreaming) setTimeout(() => input.focus(), 50);
-    }
-    if (sendBtn) {
-      sendBtn.addEventListener('click', () => {
-        const q = input?.value.trim();
-        if (q && !isStreaming) send(q);
-      });
-    }
+    bindComposer(pb);
 
     // Bind copy buttons
     pb.querySelectorAll('[data-copy-idx]').forEach(btn => {
@@ -401,11 +464,6 @@ window.Chatbot = (function () {
 
   // ---- Public API ----
   return {
-    // Render the chat panel (shows welcome state if no messages)
-    show() {
-      render();
-    },
-
     // Start a new chat with an initial question
     start(question) {
       console.log('[Chatbot] start called:', question);
@@ -431,6 +489,10 @@ window.Chatbot = (function () {
         abortController.abort();
         abortController = null;
       }
+    },
+
+    show() {
+      showIdle();
     },
 
     clearHistory() {
