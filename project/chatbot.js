@@ -22,6 +22,38 @@ window.Chatbot = (function () {
   let reasoningStep = -1; // -1 = not active; 0/1/2 = current step index
   let reasoningTimers = [];
 
+  // ---- Follow-up placeholder hints ----
+  const PLACEHOLDER_HINTS = [
+    '试试问：先修阶段都学什么？',
+    '试试问：补贴什么时候发？',
+    '试试问：如何约 Mentor 做 1:1？',
+    '试试问：请假需要走什么流程？',
+    '试试问：考核标准是什么？',
+    '试试问：忘记打卡怎么办？',
+  ];
+
+  function randomPlaceholder() {
+    return PLACEHOLDER_HINTS[Math.floor(Math.random() * PLACEHOLDER_HINTS.length)];
+  }
+
+  // ---- Generate contextual follow-up suggestions from AI response ----
+  function generateFollowUps(content) {
+    const rules = [
+      { keywords: ['补贴', '津贴', '薪资', '工资'], suggestions: ['补贴什么时候发？', '请假怎么扣补贴？'] },
+      { keywords: ['请假', '病假', '事假'], suggestions: ['请假需要什么材料？', '请假会影响考核吗？'] },
+      { keywords: ['打卡', '出勤', '考勤'], suggestions: ['忘记打卡怎么办？', '远程办公怎么算出勤？'] },
+      { keywords: ['mentor', '导师', '指导'], suggestions: ['Mentor 多久联系一次？', '可以换 Mentor 吗？'] },
+      { keywords: ['课程', '培养', '先修', '模块'], suggestions: ['课程考核标准是什么？', '先修阶段多长时间？'] },
+      { keywords: ['转组', '退出', '终止'], suggestions: ['转组流程需要多久？', '退出后还能回来吗？'] },
+      { keywords: ['入职', '入院', '第一周', '报到'], suggestions: ['入职需要带什么材料？', '第一天去哪里报到？'] },
+    ];
+    const lc = content.toLowerCase();
+    for (const rule of rules) {
+      if (rule.keywords.some(k => lc.includes(k))) return rule.suggestions;
+    }
+    return ['书院有哪些课程模块？', '联培生有什么福利？'];
+  }
+
   // ---- DOM refs ----
   const $ = (s, r = document) => r.querySelector(s);
   const panelBody = () => $('#panelBody');
@@ -87,19 +119,63 @@ window.Chatbot = (function () {
     const pb = panelBody();
     if (!pb) return;
 
+    // Welcome state — no messages yet
+    if (messages.length === 0) {
+      pb.innerHTML = `
+        <div class="chat-container">
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-welcome">
+              <div class="chat-welcome-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+                </svg>
+              </div>
+              <div class="chat-welcome-title">Hi，我是书院 AI 助手</div>
+              <div class="chat-welcome-desc">我了解书院的制度、流程和培养体系，有什么可以帮你的？</div>
+              <div class="chat-suggestions">
+                <button class="chat-suggestion-btn" data-question="请假会影响补贴吗？">请假会影响补贴吗？</button>
+                <button class="chat-suggestion-btn" data-question="入院第一周要做什么？">入院第一周该做什么？</button>
+                <button class="chat-suggestion-btn" data-question="如何和 Mentor 沟通？">怎么和 Mentor 沟通？</button>
+                <button class="chat-suggestion-btn" data-question="出勤打卡规则是什么？">出勤打卡规则是什么？</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      pb.querySelectorAll('.chat-suggestion-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const q = btn.dataset.question;
+          if (q && !isStreaming) send(q);
+        });
+      });
+      return;
+    }
+
     const msgsHTML = messages.map((m, i) => {
       const isUser = m.role === 'user';
       const isLast = i === messages.length - 1;
-      const bubbleContent = isUser ? md(m.content) : md(m.content) + (!isUser && isStreaming && isLast ? '<span class="chat-cursor"></span>' : '');
+      const bubbleContent = isUser
+        ? md(m.content)
+        : md(m.content) + (isStreaming && isLast ? '<span class="chat-cursor"></span>' : '');
 
       let actionsHTML = '';
       if (!isUser && m.content && !(isStreaming && isLast)) {
+        const followUps = generateFollowUps(m.content);
         actionsHTML = `
-          <div class="chat-actions">
-            <button class="chat-action-btn" data-copy-idx="${i}" title="复制">
-              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              <span>复制</span>
-            </button>
+          <div class="chat-response-footer">
+            <div class="chat-response-meta">
+              <span class="chat-source-tag">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                来源：书院知识库
+              </span>
+              <button class="chat-action-btn" data-copy-idx="${i}" title="复制">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                <span>复制</span>
+              </button>
+            </div>
+            ${followUps.length > 0 ? `
+              <div class="chat-followups">
+                ${followUps.map(q => `<button class="chat-followup-btn" data-question="${q}">${q}</button>`).join('')}
+              </div>` : ''}
           </div>`;
       }
 
@@ -129,7 +205,7 @@ window.Chatbot = (function () {
           ${typingHTML}
         </div>
         <div class="chat-input-bar">
-          <input type="text" id="chatFollowUp" placeholder="继续追问..." ${isStreaming ? 'disabled' : ''} autocomplete="off" />
+          <input type="text" id="chatFollowUp" placeholder="${randomPlaceholder()}" ${isStreaming ? 'disabled' : ''} autocomplete="off" />
           <button id="chatSendBtn" ${isStreaming ? 'disabled' : ''} aria-label="发送">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
@@ -154,7 +230,6 @@ window.Chatbot = (function () {
           if (q && !isStreaming) send(q);
         }
       });
-      // Auto-focus follow-up input (only if not streaming)
       if (!isStreaming) setTimeout(() => input.focus(), 50);
     }
     if (sendBtn) {
@@ -177,6 +252,14 @@ window.Chatbot = (function () {
           btn.classList.remove('is-copied');
           btn.querySelector('span').textContent = '复制';
         }, 1500);
+      });
+    });
+
+    // Bind follow-up suggestion buttons
+    pb.querySelectorAll('.chat-followup-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.dataset.question;
+        if (q && !isStreaming) send(q);
       });
     });
   }
@@ -310,6 +393,11 @@ window.Chatbot = (function () {
 
   // ---- Public API ----
   return {
+    // Render the chat panel (shows welcome state if no messages)
+    show() {
+      render();
+    },
+
     // Start a new chat with an initial question
     start(question) {
       console.log('[Chatbot] start called:', question);
