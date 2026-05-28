@@ -6,13 +6,61 @@ window.Chatbot = (function () {
   console.log('[Chatbot] loaded');
 
   // ---- State ----
-  let messages = []; // {role: 'user'|'assistant', content: string}
+  const HISTORY_KEY = 'academy-ai-conversation-history';
+  const MAX_HISTORY_MESSAGES = 10;
+  let conversationHistory = loadHistory(); // persisted {role: 'user'|'assistant', content: string}
+  let messages = conversationHistory.slice(); // current panel render state
   let isStreaming = false;
   let abortController = null;
+
+  // ---- Reasoning animation state ----
+  const REASONING_STEPS = [
+    '🔍 正在查阅书院资料...',
+    '📄 匹配相关制度文档...',
+    '✅ 生成回答中...'
+  ];
+  let reasoningStep = -1; // -1 = not active; 0/1/2 = current step index
+  let reasoningTimers = [];
 
   // ---- DOM refs ----
   const $ = (s, r = document) => r.querySelector(s);
   const panelBody = () => $('#panelBody');
+
+  function normalizeMessages(items) {
+    if (!Array.isArray(items)) return [];
+    return items
+      .filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+      .map(m => ({ role: m.role, content: m.content.trim() }))
+      .filter(m => m.content);
+  }
+
+  function loadHistory() {
+    try {
+      return normalizeMessages(JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'));
+    } catch (e) {
+      console.warn('[Chatbot] failed to load history:', e);
+      return [];
+    }
+  }
+
+  function saveHistory() {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(conversationHistory));
+    } catch (e) {
+      console.warn('[Chatbot] failed to save history:', e);
+    }
+  }
+
+  function appendHistory(role, content) {
+    const clean = typeof content === 'string' ? content.trim() : '';
+    if (!clean) return;
+    conversationHistory.push({ role, content: clean });
+    saveHistory();
+  }
+
+  function recentHistory() {
+    return normalizeMessages(conversationHistory).slice(-MAX_HISTORY_MESSAGES);
+  }
 
   // ---- Markdown-lite: convert **bold**, `code`, and newlines ----
   function md(text) {
@@ -21,6 +69,17 @@ window.Chatbot = (function () {
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/`([^`]+)`/g, '<code>$1</code>')
       .replace(/\n/g, '<br>');
+  }
+
+  // ---- Update reasoning step classes without full re-render ----
+  function updateReasoning() {
+    const container = document.querySelector('.chat-reasoning');
+    if (!container) return;
+    container.querySelectorAll('.chat-reasoning-step').forEach((el, i) => {
+      el.className = 'chat-reasoning-step';
+      if (i < reasoningStep) el.classList.add('is-done');
+      else if (i === reasoningStep) el.classList.add('is-active');
+    });
   }
 
   // ---- Render the full chat UI into the panel ----
@@ -52,15 +111,14 @@ window.Chatbot = (function () {
         </div>`;
     }).join('');
 
-    // Typing indicator (shown when streaming hasn't produced content yet)
+    // Reasoning steps (shown when streaming hasn't produced content yet)
     const lastMsg = messages[messages.length - 1];
     const showTyping = isStreaming && lastMsg && lastMsg.role === 'assistant' && !lastMsg.content;
     const typingHTML = showTyping ? `
       <div class="chat-msg is-ai">
         <span class="chat-msg-label">Academy AI</span>
-        <div class="chat-typing">
-          <div class="chat-typing-dots"><span></span><span></span><span></span></div>
-          <span>思考中</span>
+        <div class="chat-reasoning">
+          ${REASONING_STEPS.map(s => `<div class="chat-reasoning-step">${s}</div>`).join('')}
         </div>
       </div>` : '';
 
@@ -77,6 +135,9 @@ window.Chatbot = (function () {
           </button>
         </div>
       </div>`;
+
+    // Restore reasoning step classes after re-render
+    if (reasoningStep >= 0) updateReasoning();
 
     // Scroll to bottom
     const msgBox = $('#chatMessages');
@@ -141,24 +202,32 @@ window.Chatbot = (function () {
 
     // Add user message
     messages.push({ role: 'user', content: userText });
+    appendHistory('user', userText);
 
     // Add empty assistant message (will be filled by stream)
     messages.push({ role: 'assistant', content: '' });
 
     isStreaming = true;
-    render(); // Show user bubble + typing indicator
+    render(); // Show user bubble + reasoning placeholder
+
+    // Start reasoning animation
+    reasoningTimers.forEach(t => clearTimeout(t));
+    reasoningTimers = [];
+    reasoningStep = 0;
+    updateReasoning();
+    reasoningTimers.push(setTimeout(() => { if (reasoningStep >= 0) { reasoningStep = 1; updateReasoning(); } }, 800));
+    reasoningTimers.push(setTimeout(() => { if (reasoningStep >= 0) { reasoningStep = 2; updateReasoning(); } }, 1600));
 
     abortController = new AbortController();
 
     try {
       console.log('[Chatbot] fetch /api/chat');
+      let completed = false;
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: messages
-            .filter(m => m.content) // Skip the empty assistant placeholder
-            .map(m => ({ role: m.role, content: m.content }))
+          messages: recentHistory()
         }),
         signal: abortController.signal
       });
@@ -194,9 +263,12 @@ window.Chatbot = (function () {
               const lastMsg = messages[messages.length - 1];
               lastMsg.content += parsed.content;
 
-              // First chunk: do full render to remove typing indicator
+              // First chunk: clear reasoning animation, do full render
               if (firstChunk) {
                 firstChunk = false;
+                reasoningTimers.forEach(t => clearTimeout(t));
+                reasoningTimers = [];
+                reasoningStep = -1;
                 render();
               } else {
                 // Subsequent chunks: only update last bubble for performance
@@ -207,6 +279,12 @@ window.Chatbot = (function () {
             // Skip malformed chunks
           }
         }
+      }
+      completed = true;
+
+      const lastMsg = messages[messages.length - 1];
+      if (completed && lastMsg?.role === 'assistant' && lastMsg.content) {
+        appendHistory('assistant', lastMsg.content);
       }
     } catch (err) {
       if (err.name === 'AbortError') {
@@ -235,7 +313,7 @@ window.Chatbot = (function () {
     // Start a new chat with an initial question
     start(question) {
       console.log('[Chatbot] start called:', question);
-      messages = [];
+      messages = conversationHistory.slice();
       isStreaming = false;
       if (abortController) {
         abortController.abort();
@@ -256,6 +334,21 @@ window.Chatbot = (function () {
       if (abortController) {
         abortController.abort();
         abortController = null;
+      }
+    },
+
+    clearHistory() {
+      conversationHistory = [];
+      messages = [];
+      isStreaming = false;
+      if (abortController) {
+        abortController.abort();
+        abortController = null;
+      }
+      try {
+        localStorage.removeItem(HISTORY_KEY);
+      } catch (e) {
+        console.warn('[Chatbot] failed to clear history:', e);
       }
     }
   };

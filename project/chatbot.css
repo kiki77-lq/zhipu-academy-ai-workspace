@@ -97,6 +97,37 @@
   font-family: "SF Mono", "Fira Code", monospace;
 }
 
+/* ---- Reasoning steps (shown before first stream chunk) ---- */
+.chat-reasoning {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 2px;
+}
+
+.chat-reasoning-step {
+  font-size: 13px;
+  color: var(--text-disabled);
+  opacity: 0;
+  transition: color 0.25s, opacity 0.25s;
+}
+
+.chat-reasoning-step.is-active {
+  color: var(--text-secondary);
+  opacity: 1;
+  animation: reasoningFadeIn 0.3s ease-out;
+}
+
+.chat-reasoning-step.is-done {
+  color: var(--text-disabled);
+  opacity: 0.55;
+}
+
+@keyframes reasoningFadeIn {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 /* ---- AI typing indicator ---- */
 .chat-typing {
   display: flex;
