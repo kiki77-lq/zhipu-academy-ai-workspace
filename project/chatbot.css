@@ -11,28 +11,30 @@
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 24px 12px;
+  padding: 24px 28px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 /* ---- Message bubbles ---- */
 .chat-msg {
   display: flex;
   flex-direction: column;
-  max-width: 88%;
   animation: chatFadeIn 0.25s ease-out;
 }
 
 .chat-msg.is-user {
   align-self: flex-end;
   align-items: flex-end;
+  max-width: 320px;
+  margin-right: 24px;
 }
 
 .chat-msg.is-ai {
   align-self: flex-start;
   align-items: flex-start;
+  max-width: 680px;
 }
 
 .chat-msg-label {
@@ -167,7 +169,8 @@
 .chat-response-meta {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .chat-source-tag {
@@ -176,10 +179,10 @@
   gap: 4px;
   font-size: 11px;
   color: var(--text-disabled);
-  padding: 2px 8px;
+  padding: 3px 10px;
   border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  background: var(--bg-surface-soft);
+  border-radius: 6px;
+  background: transparent;
 }
 
 .chat-source-tag svg {
@@ -195,7 +198,7 @@
 
 .chat-followup-btn {
   padding: 5px 12px;
-  border: 1px dashed var(--border-default);
+  border: 1px solid var(--border-subtle);
   border-radius: 16px;
   background: transparent;
   color: var(--text-muted);
@@ -206,39 +209,43 @@
 
 .chat-followup-btn:hover {
   border-color: var(--accent);
-  border-style: solid;
   color: var(--accent);
-  background: var(--accent-soft);
+  background: rgba(58, 116, 94, 0.04);
 }
 
-/* ---- Reasoning steps (shown before first stream chunk) ---- */
+/* ---- Reasoning card (standalone, no bubble wrapper) ---- */
 .chat-reasoning {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 6px 2px;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  max-width: 300px;
+  animation: chatFadeIn 0.2s ease-out;
 }
 
 .chat-reasoning-step {
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--text-disabled);
   opacity: 0;
-  transition: color 0.25s, opacity 0.25s;
+  transition: color 0.2s, opacity 0.2s;
 }
 
 .chat-reasoning-step.is-active {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   opacity: 1;
-  animation: reasoningFadeIn 0.3s ease-out;
+  animation: reasoningFadeIn 0.25s ease-out;
 }
 
 .chat-reasoning-step.is-done {
   color: var(--text-disabled);
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
 @keyframes reasoningFadeIn {
-  from { opacity: 0; transform: translateX(-4px); }
+  from { opacity: 0; transform: translateX(-3px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
@@ -314,11 +321,11 @@
   stroke-width: 2;
 }
 
-/* ---- Bottom input bar ---- */
+/* ---- Bottom composer bar ---- */
 .chat-input-bar {
-  padding: 12px 16px 16px;
+  padding: 12px 20px 16px;
   border-top: 1px solid var(--border-subtle);
-  background: var(--bg-surface-soft);
+  background: var(--bg-surface);
   display: flex;
   gap: 8px;
   align-items: center;
@@ -326,18 +333,19 @@
 
 .chat-input-bar input {
   flex: 1;
-  padding: 8px 12px;
+  padding: 9px 16px;
   border: 1px solid var(--border-default);
-  border-radius: 8px;
+  border-radius: 24px;
   font-size: 13px;
-  background: var(--bg-surface);
+  background: var(--bg-surface-soft);
   color: var(--text-primary);
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .chat-input-bar input:focus {
   border-color: var(--accent);
+  background: var(--bg-surface);
   box-shadow: var(--focus-ring);
 }
 
@@ -346,10 +354,10 @@
 }
 
 .chat-input-bar button {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border: none;
-  border-radius: 8px;
+  border-radius: 50%;
   background: var(--accent);
   color: #fff;
   cursor: pointer;
@@ -370,8 +378,8 @@
 }
 
 .chat-input-bar button svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   stroke: #fff;
   fill: none;
   stroke-width: 2;

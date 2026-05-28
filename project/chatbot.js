@@ -22,14 +22,14 @@ window.Chatbot = (function () {
   let reasoningStep = -1; // -1 = not active; 0/1/2 = current step index
   let reasoningTimers = [];
 
-  // ---- Follow-up placeholder hints ----
+  // ---- Follow-up placeholder hints (prefix added at render time) ----
   const PLACEHOLDER_HINTS = [
-    '试试问：先修阶段都学什么？',
-    '试试问：补贴什么时候发？',
-    '试试问：如何约 Mentor 做 1:1？',
-    '试试问：请假需要走什么流程？',
-    '试试问：考核标准是什么？',
-    '试试问：忘记打卡怎么办？',
+    '先修阶段都学什么？',
+    '补贴什么时候发？',
+    '如何约 Mentor 做 1:1？',
+    '请假需要走什么流程？',
+    '考核标准是什么？',
+    '忘记打卡怎么办？',
   ];
 
   function randomPlaceholder() {
@@ -38,6 +38,7 @@ window.Chatbot = (function () {
 
   // ---- Generate contextual follow-up suggestions from AI response ----
   function generateFollowUps(content) {
+    if (!content || content.length < 40) return [];
     const rules = [
       { keywords: ['补贴', '津贴', '薪资', '工资'], suggestions: ['补贴什么时候发？', '请假怎么扣补贴？'] },
       { keywords: ['请假', '病假', '事假'], suggestions: ['请假需要什么材料？', '请假会影响考核吗？'] },
@@ -51,7 +52,7 @@ window.Chatbot = (function () {
     for (const rule of rules) {
       if (rule.keywords.some(k => lc.includes(k))) return rule.suggestions;
     }
-    return ['书院有哪些课程模块？', '联培生有什么福利？'];
+    return ['入院第一周要做什么？', '书院的培养体系是什么？'];
   }
 
   // ---- DOM refs ----
@@ -131,7 +132,7 @@ window.Chatbot = (function () {
                 </svg>
               </div>
               <div class="chat-welcome-title">Hi，我是书院 AI 助手</div>
-              <div class="chat-welcome-desc">我了解书院的制度、流程和培养体系，有什么可以帮你的？</div>
+              <div class="chat-welcome-desc">我可以帮你查询入院、请假、补贴、Mentor 沟通等问题</div>
               <div class="chat-suggestions">
                 <button class="chat-suggestion-btn" data-question="请假会影响补贴吗？">请假会影响补贴吗？</button>
                 <button class="chat-suggestion-btn" data-question="入院第一周要做什么？">入院第一周该做什么？</button>
@@ -153,6 +154,10 @@ window.Chatbot = (function () {
     const msgsHTML = messages.map((m, i) => {
       const isUser = m.role === 'user';
       const isLast = i === messages.length - 1;
+
+      // Don't render the empty assistant placeholder — reasoning card covers this
+      if (!isUser && isStreaming && isLast && !m.content) return '';
+
       const bubbleContent = isUser
         ? md(m.content)
         : md(m.content) + (isStreaming && isLast ? '<span class="chat-cursor"></span>' : '');
@@ -187,15 +192,12 @@ window.Chatbot = (function () {
         </div>`;
     }).join('');
 
-    // Reasoning steps (shown when streaming hasn't produced content yet)
+    // Reasoning card (standalone — shown when streaming hasn't produced content yet)
     const lastMsg = messages[messages.length - 1];
     const showTyping = isStreaming && lastMsg && lastMsg.role === 'assistant' && !lastMsg.content;
     const typingHTML = showTyping ? `
-      <div class="chat-msg is-ai">
-        <span class="chat-msg-label">Academy AI</span>
-        <div class="chat-reasoning">
-          ${REASONING_STEPS.map(s => `<div class="chat-reasoning-step">${s}</div>`).join('')}
-        </div>
+      <div class="chat-reasoning">
+        ${REASONING_STEPS.map(s => `<div class="chat-reasoning-step">${s}</div>`).join('')}
       </div>` : '';
 
     pb.innerHTML = `
@@ -205,7 +207,7 @@ window.Chatbot = (function () {
           ${typingHTML}
         </div>
         <div class="chat-input-bar">
-          <input type="text" id="chatFollowUp" placeholder="${randomPlaceholder()}" ${isStreaming ? 'disabled' : ''} autocomplete="off" />
+          <input type="text" id="chatFollowUp" placeholder="试试问：${randomPlaceholder()}" ${isStreaming ? 'disabled' : ''} autocomplete="off" />
           <button id="chatSendBtn" ${isStreaming ? 'disabled' : ''} aria-label="发送">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
@@ -370,14 +372,20 @@ window.Chatbot = (function () {
         appendHistory('assistant', lastMsg.content);
       }
     } catch (err) {
+      // Always clean up reasoning animation on any error or abort
+      reasoningStep = -1;
+      reasoningTimers.forEach(t => clearTimeout(t));
+      reasoningTimers = [];
+
       if (err.name === 'AbortError') {
-        // User cancelled, do nothing
+        // User cancelled — remove the pending empty assistant message
+        const lastMsg = messages[messages.length - 1];
+        if (lastMsg?.role === 'assistant' && !lastMsg.content) messages.pop();
       } else {
         console.error('Chat error:', err);
-        // Replace empty assistant message with error
         const lastMsg = messages[messages.length - 1];
         if (!lastMsg.content) {
-          messages.pop(); // Remove empty assistant msg
+          messages.pop();
           messages.push({
             role: 'assistant',
             content: '⚠️ 网络异常，请稍后重试。如果持续出现问题，请联系班级助理刘祺。'
