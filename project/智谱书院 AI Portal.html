@@ -98,17 +98,17 @@
   <main class="ws-main center">
     <div class="ws-main-inner">
       <header class="ws-hero">
-        <h1>新同学 AI 工作台</h1>
-        <p class="ws-lede">选择一个任务，AI 会整理依据、步骤和可复制模板。</p>
+        <h1>Academy AI 工作台</h1>
+        <p class="ws-lede">选择一个任务，或在右侧直接提问；AI 会整理依据、步骤和可复制模板。</p>
       </header>
 
-      <div class="section-label">提问</div>
+      <div class="section-label">任务搜索</div>
       <div class="ws-cmd search-box">
-        <span class="ws-cmd-tag">Ask Academy AI</span>
-        <input id="aiInput" type="text" placeholder="或者直接问我：培养体系、入院流程、打卡补贴、导师沟通……" autocomplete="off" />
+        <span class="ws-cmd-tag">Task Search</span>
+        <input id="aiInput" type="text" placeholder="搜索任务…" autocomplete="off" />
         <kbd class="ws-cmd-key">⏎</kbd>
-        <button class="ws-cmd-send" aria-label="发送">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        <button class="ws-cmd-send" aria-label="搜索任务">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
         </button>
       </div>
 
@@ -116,7 +116,7 @@
         <div class="ws-launcher-head">
           <div>
             <div class="section-label">推荐任务</div>
-            <h2 class="ws-launcher-title" id="wsTaskLabel">推荐任务 · 新同学</h2>
+            <h2 class="ws-launcher-title" id="wsTaskLabel">推荐任务 · 当前阶段</h2>
           </div>
           <span class="ws-count" id="wsTaskCount">05</span>
         </div>
@@ -133,9 +133,9 @@
   <aside class="ws-panel panel answer-panel" id="panel">
     <div class="panel-head">
       <div class="crumb">
-        <span id="crumbRole">新同学</span>
+        <span id="crumbRole">Academy AI</span>
         <span class="slash">/</span>
-        <b id="crumbTask">Academy Assistant</b>
+        <b id="crumbTask">Assistant</b>
       </div>
       <div class="actions">
         <button class="icon-btn" id="panelClear" title="清空">

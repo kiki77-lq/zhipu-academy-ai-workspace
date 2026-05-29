@@ -1,72 +1,113 @@
 // Vercel Serverless Function — proxies chat to GLM-4 API
 // API Key is read from Vercel environment variable GLM_API_KEY
 
+const KNOWLEDGE_ID = '2059830220546011136';
+const KNOWLEDGE_RETRIEVE_URL = 'https://open.bigmodel.cn/api/llm-application/open/knowledge/retrieve';
+const MAX_KNOWLEDGE_CHUNKS = 5;
+const MAX_CHUNK_CHARS = 900;
+
 const SYSTEM_PROMPT = `你是「智谱书院 AI 助手」（Academy AI），服务于智谱书院的联培生（联合培养学生）。
 
 ## 你的身份
 你是书院的 AI 工作台助手，帮助学生快速了解制度、流程和培养体系。你的语气像一个耐心、专业的学长/学姐。
 
-## 你掌握的核心知识
-
-### 书院概况
-- 愿景：把每一位同学都培养成全球 AGI 的顶尖人才
-- 校长：唐杰，副校长：李涓子，执行负责人：何芸
-- 价值观：人品正、硬算法、可复现、求完备
-- 双归属机制：组织归属于书院，研究归属于 Mentor 团队
-
-### 培养体系
-- 四大课程模块（共 8 周）：
-  1. 核心基座（1-3周）：Transformer/大模型数学推导/Training Infra，授课：唐杰、东昱晓
-  2. 对齐与推理（4-5周）：SFT→CoT→RLHF→RLVR→AgentRL，授课：王宏宁、黄民烈
-  3. 多模态感知（第7周）：CLIP/CogVLM/扩散模型/视频生成，授课：顾晓韬
-  4. 智能体与具身智能（8-9周）：VLA/Coding Agent/Sim2Real，授课：刘潇、张静
-- 四个培养阶段：准备阶段 → 探索阶段 → 深入阶段 → 收获阶段
-- 最终考核：复现并改进指定论文，提交「完整性报告」+「失败复盘记录」
-
-### 补贴与薪资
-- 进书院（先修）：12,000元/月（7,000智谱津贴 + 5,000生活补贴）
-- 直接进组：15,000元/月（10,000智谱津贴 + 5,000生活补贴）
-- 预备生：10,000元/月（仅智谱津贴）
-- 发放方式：按月实际打卡天数核算
-
-### 出勤制度
-- 原则上每周不少于 5 天到岗
-- 因课程等特殊情况可协商调整为不少于 3 天线下
-- 预警机制：5天未打卡→黄色预警（刘祺联系），10天→橙色预警（何芸介入），15天→红色预警（校长评估退出）
-
-### 请假制度
-- ≤3个工作日：Mentor 审批，书院备案
-- 3-10个工作日：Mentor + 书院共同审批
-- >10个工作日：执行负责人审批
-- 病假超1月需二级以上医院证明
-- 所有请假须通过飞书系统留痕，口头请假不生效
-
-### Mentor 机制
-- Mentor 是培养第一责任人
-- 每周至少 1 次深度指导（组会）
-- 每月简评
-- Mentor 不得单方面拒收/退回学生
-- 研究推进异常：2周无推进→刘祺沟通，2月无推进→何芸介入
-
-### 转组与退出
-- 联培期内原则上只允许转组一次
-- 退出必须经校长或副校长批准
-- 退出流程：学生/Mentor提出 → 何芸评估 → 唐杰/李涓子审批
-
-### 关键联系人
-- 班级助理 刘祺：日常管理、打卡异常、问卷归档、群运营
-- HRBP：Offer发放、协议签署、权限开通、补贴核算
-- 执行负责人 何芸（13910985933）：整体运营、异常处理、对外协调
-- HR SSC：考勤数据、飞书请假流程
+## 知识使用方式
+你会收到一段由智谱知识库检索得到的「知识库片段」。回答书院制度、培养体系、请假、补贴、Mentor 沟通等问题时，必须优先依据这些片段。
+如果片段能回答问题，尽量给出「来源依据」，包括来源文档标题和相关段落摘要。
+如果片段不足以回答，说明当前知识库片段未找到明确依据，再给出谨慎建议；不要编造不存在的制度、数字或联系人。
 
 ## 回答规则
 1. 用中文回答
-2. 重要信息用 **加粗** 标注
-3. 涉及具体数字（补贴、天数、电话）务必准确引用上述知识
-4. 如果问题超出书院范围，诚实说"这个问题我不太确定，建议联系何芸老师（13910985933）或班级助理刘祺"
-5. 回答控制在 300 字以内，简洁、可执行
-6. 适当用列表让信息更清晰
-7. 不要编造不存在的制度或数字`;
+2. 重要信息用 **加粗** 标注。
+3. 涉及具体数字（补贴、天数、电话）务必来自知识库片段或对话上下文。
+4. 允许正常回应基础寒暄、连接测试和简单通用问题，例如"hi"、"你好"、"测试"。这类问题不要拒答，也不要建议联系书院老师或助理。
+5. 如果用户问"今天周几"、"现在几点"等需要实时日期/时间的问题，说明"我无法实时获取当前日期/时间"，可以建议用户查看设备时间，但不要建议联系班级助理或何芸老师。
+6. 对明显超出书院范围且较复杂的问题，礼貌说明你的主要范围是智谱书院制度、培养体系、请假、补贴、Mentor 沟通等；如果涉及书院具体执行口径不确定，再建议联系何芸老师（13910985933）或班级助理刘祺。
+7. 回答后可以自然引导用户继续询问书院制度、培养体系、请假、补贴、Mentor 沟通等问题。
+8. 回答控制在 300 字以内，简洁、可执行
+9. 适当用列表让信息更清晰
+10. 不要编造不存在的制度或数字`;
+
+function normalizeMessages(messages) {
+  return Array.isArray(messages)
+    ? messages
+        .filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+        .map(m => ({ role: m.role, content: m.content.trim() }))
+        .filter(m => m.content)
+        .slice(-10)
+    : [];
+}
+
+function latestUserQuestion(messages) {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    if (messages[i].role === 'user') return messages[i].content;
+  }
+  return '';
+}
+
+function requestId() {
+  return `academy-ai-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function truncateText(text, maxLength) {
+  if (!text) return '';
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}
+
+function formatKnowledgeContext(chunks) {
+  if (!chunks.length) {
+    return '本次检索未返回可用知识库片段。';
+  }
+
+  return chunks.map((chunk, index) => {
+    const meta = chunk.metadata || {};
+    const title = meta.doc_name || '未命名文档';
+    const url = meta.doc_url ? `\n文档链接：${meta.doc_url}` : '';
+    const text = truncateText(chunk.text || meta.contextual_text || '', MAX_CHUNK_CHARS);
+    const contextualText = meta.contextual_text && meta.contextual_text !== chunk.text
+      ? `\n上下文摘要：${truncateText(meta.contextual_text, 260)}`
+      : '';
+    const score = typeof chunk.score === 'number' ? `\n相关度：${chunk.score.toFixed(4)}` : '';
+
+    return `[${index + 1}] 来源文档：${title}${url}${score}${contextualText}\n片段：${text}`;
+  }).join('\n\n');
+}
+
+async function retrieveKnowledge(apiKey, query) {
+  if (!query) return [];
+
+  const retrieveRes = await fetch(KNOWLEDGE_RETRIEVE_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      query: truncateText(query, 1000),
+      knowledge_ids: [KNOWLEDGE_ID],
+      request_id: requestId(),
+      top_k: MAX_KNOWLEDGE_CHUNKS,
+      top_n: 12,
+      recall_method: 'mixed',
+      recall_ratio: 80,
+      rerank_status: 1,
+      rerank_model: 'rerank',
+      fractional_threshold: 0.2
+    })
+  });
+
+  if (!retrieveRes.ok) {
+    const errText = await retrieveRes.text();
+    throw new Error(`Knowledge retrieve error: ${retrieveRes.status} ${errText}`);
+  }
+
+  const payload = await retrieveRes.json();
+  if (payload.code && payload.code !== 200) {
+    throw new Error(`Knowledge retrieve error: ${payload.code} ${payload.message || ''}`);
+  }
+
+  return Array.isArray(payload.data) ? payload.data.slice(0, MAX_KNOWLEDGE_CHUNKS) : [];
+}
 
 export default async function handler(req, res) {
   // CORS
@@ -89,11 +130,21 @@ export default async function handler(req, res) {
 
   try {
     const { messages = [] } = req.body;
+    const recentMessages = normalizeMessages(messages);
+    const question = latestUserQuestion(recentMessages);
+    const knowledgeChunks = await retrieveKnowledge(apiKey, question);
+    const knowledgeContext = formatKnowledgeContext(knowledgeChunks);
+    const ragPrompt = `${SYSTEM_PROMPT}
+
+## 本次知识库检索
+知识库 ID：${KNOWLEDGE_ID}
+
+${knowledgeContext}`;
 
     // Prepend system prompt
     const fullMessages = [
-      { role: 'system', content: SYSTEM_PROMPT },
-      ...messages.slice(-10) // Keep last 10 messages to stay within token limit
+      { role: 'system', content: ragPrompt },
+      ...recentMessages // Keep last 10 messages to stay within token limit
     ];
 
     const glmRes = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {

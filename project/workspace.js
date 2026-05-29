@@ -66,9 +66,9 @@
       });
     });
     $("#wsTaskLabel").textContent =
-      currentRole === "student" ? "推荐任务 · 新同学" : "推荐任务 · 外部访客";
+      currentRole === "student" ? "推荐任务 · 当前阶段" : "推荐任务 · 外部访客";
     $("#wsTaskCount").textContent = String(t.length).padStart(2, "0");
-    $("#crumbRole").textContent = currentRole === "student" ? "新同学" : "外部访客";
+    $("#crumbRole").textContent = "Academy AI";
   }
 
   // -------- Main 2x2 quick grid (first 4 tasks) --------
@@ -129,7 +129,7 @@
   function showEmpty() {
     currentTaskId = null;
     syncActiveTaskState();
-    $("#crumbTask").textContent = "Academy Assistant";
+    $("#crumbTask").textContent = "Assistant";
     window.Chatbot?.show();
   }
 
@@ -272,29 +272,7 @@
       console.warn("[Workspace] #aiInput not found");
       return;
     }
-    let i = 0, charIdx = 0, phase = "type";
-    function tick() {
-      if (document.activeElement === input) {
-        input.placeholder = window.PLACEHOLDERS[i];
-        setTimeout(tick, 800);
-        return;
-      }
-      const target = window.PLACEHOLDERS[i];
-      if (phase === "type") {
-        charIdx++;
-        input.placeholder = target.slice(0, charIdx);
-        if (charIdx >= target.length) { phase = "hold"; setTimeout(tick, 1800); return; }
-        setTimeout(tick, 38 + Math.random() * 30);
-      } else if (phase === "hold") {
-        phase = "erase"; setTimeout(tick, 50);
-      } else {
-        charIdx -= 2;
-        if (charIdx <= 0) { charIdx = 0; i = (i + 1) % window.PLACEHOLDERS.length; phase = "type"; }
-        input.placeholder = target.slice(0, Math.max(0, charIdx));
-        setTimeout(tick, 18);
-      }
-    }
-    tick();
+    input.placeholder = "搜索任务…";
 
     function handleAskInput() {
       const q = input.value.trim();

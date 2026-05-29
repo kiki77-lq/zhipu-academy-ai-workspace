@@ -157,27 +157,38 @@ window.Chatbot = (function () {
               <p class="chat-idle-desc">选择一个任务，或直接提问。Academy AI 会结合书院知识库，为你整理结论、步骤、依据和可复制模板。</p>
             </div>
 
-            <div class="chat-capability-grid" aria-label="结构化输出能力">
-              <article class="chat-capability-card">
-                <span class="chat-capability-mark">01</span>
-                <h3 class="chat-capability-title">一句话结论</h3>
-                <p class="chat-capability-desc">先给出明确判断，避免反复翻制度。</p>
-              </article>
-              <article class="chat-capability-card">
-                <span class="chat-capability-mark">02</span>
-                <h3 class="chat-capability-title">行动清单</h3>
-                <p class="chat-capability-desc">把流程拆成可执行步骤，知道下一步做什么。</p>
-              </article>
-              <article class="chat-capability-card">
-                <span class="chat-capability-mark">03</span>
-                <h3 class="chat-capability-title">来源依据</h3>
-                <p class="chat-capability-desc">标注书院知识库来源，方便核对规则口径。</p>
-              </article>
-              <article class="chat-capability-card">
-                <span class="chat-capability-mark">04</span>
-                <h3 class="chat-capability-title">可复制模板</h3>
-                <p class="chat-capability-desc">生成请假、沟通、周报等可直接复用的文本。</p>
-              </article>
+            <div class="chat-capability-section" aria-label="结构化输出能力">
+              <h3 class="chat-capability-heading">输出结构</h3>
+              <div class="chat-capability-strip">
+                <div class="chat-capability-item">
+                  <span class="chat-capability-index">01</span>
+                  <span class="chat-capability-copy">
+                    <span class="chat-capability-title">一句话结论</span>
+                    <span class="chat-capability-desc">先给出明确判断</span>
+                  </span>
+                </div>
+                <div class="chat-capability-item">
+                  <span class="chat-capability-index">02</span>
+                  <span class="chat-capability-copy">
+                    <span class="chat-capability-title">行动清单</span>
+                    <span class="chat-capability-desc">拆成可执行步骤</span>
+                  </span>
+                </div>
+                <div class="chat-capability-item">
+                  <span class="chat-capability-index">03</span>
+                  <span class="chat-capability-copy">
+                    <span class="chat-capability-title">来源依据</span>
+                    <span class="chat-capability-desc">标注知识库来源</span>
+                  </span>
+                </div>
+                <div class="chat-capability-item">
+                  <span class="chat-capability-index">04</span>
+                  <span class="chat-capability-copy">
+                    <span class="chat-capability-title">可复制模板</span>
+                    <span class="chat-capability-desc">生成可复用文本</span>
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div class="chat-suggestion-section">
@@ -186,18 +197,22 @@ window.Chatbot = (function () {
                 <button class="chat-suggestion-card" type="button" data-question="入院第一周要做什么？">
                   <span class="chat-suggestion-card-title">入院第一周要做什么？</span>
                   <span class="chat-suggestion-card-desc">查看 Day 1 到 Day 7 的关键动作。</span>
+                  <span class="chat-suggestion-action" aria-hidden="true">→</span>
                 </button>
                 <button class="chat-suggestion-card" type="button" data-question="请假会影响补贴吗？">
                   <span class="chat-suggestion-card-title">请假会影响补贴吗？</span>
                   <span class="chat-suggestion-card-desc">理解请假、出勤与津贴之间的关系。</span>
+                  <span class="chat-suggestion-action" aria-hidden="true">→</span>
                 </button>
                 <button class="chat-suggestion-card" type="button" data-question="如何和 Mentor 沟通？">
                   <span class="chat-suggestion-card-title">如何和 Mentor 沟通？</span>
                   <span class="chat-suggestion-card-desc">获取 1:1 频率、议程模板和卡点求助方式。</span>
+                  <span class="chat-suggestion-action" aria-hidden="true">→</span>
                 </button>
                 <button class="chat-suggestion-card" type="button" data-question="出勤打卡怎么处理？">
                   <span class="chat-suggestion-card-title">出勤打卡怎么处理？</span>
                   <span class="chat-suggestion-card-desc">查看每日打卡、补卡和远程办公边界。</span>
+                  <span class="chat-suggestion-action" aria-hidden="true">→</span>
                 </button>
               </div>
             </div>
@@ -345,8 +360,10 @@ window.Chatbot = (function () {
     if (isStreaming) return;
 
     // Update breadcrumb
+    const crumbRole = $('#crumbRole');
     const crumbTask = $('#crumbTask');
-    if (crumbTask) crumbTask.textContent = 'Ask Academy AI';
+    if (crumbRole) crumbRole.textContent = 'Academy AI';
+    if (crumbTask) crumbTask.textContent = 'Assistant';
 
     // Add user message
     messages.push({ role: 'user', content: userText });
