@@ -74,7 +74,32 @@ function formatKnowledgeContext(chunks) {
 }
 
 async function retrieveKnowledge(apiKey, query) {
-  if (!query) return [];
+  if (!query) {
+    console.log('[Chat API] knowledge retrieval skipped: empty query');
+    return [];
+  }
+
+  const requestBody = {
+    query: truncateText(query, 1000),
+    knowledge_ids: [KNOWLEDGE_ID],
+    request_id: requestId(),
+    top_k: MAX_KNOWLEDGE_CHUNKS,
+    top_n: 12,
+    recall_method: 'mixed',
+    recall_ratio: 80,
+    rerank_status: 1,
+    rerank_model: 'rerank',
+    fractional_threshold: 0.2
+  };
+
+  console.log('[Chat API] knowledge id:', KNOWLEDGE_ID);
+  console.log('[Chat API] retrieve endpoint:', KNOWLEDGE_RETRIEVE_URL);
+  console.log('[Chat API] knowledge retrieval request body fields', {
+    fields: Object.keys(requestBody),
+    query_length: requestBody.query.length,
+    has_knowledge_id: requestBody.knowledge_ids.includes(KNOWLEDGE_ID),
+    knowledge_ids_count: requestBody.knowledge_ids.length
+  });
 
   const retrieveRes = await fetch(KNOWLEDGE_RETRIEVE_URL, {
     method: 'POST',
@@ -82,23 +107,18 @@ async function retrieveKnowledge(apiKey, query) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`
     },
-    body: JSON.stringify({
-      query: truncateText(query, 1000),
-      knowledge_ids: [KNOWLEDGE_ID],
-      request_id: requestId(),
-      top_k: MAX_KNOWLEDGE_CHUNKS,
-      top_n: 12,
-      recall_method: 'mixed',
-      recall_ratio: 80,
-      rerank_status: 1,
-      rerank_model: 'rerank',
-      fractional_threshold: 0.2
-    })
+    body: JSON.stringify(requestBody)
+  });
+
+  console.log('[Chat API] knowledge retrieval status', {
+    status: retrieveRes.status,
+    statusText: retrieveRes.statusText
   });
 
   if (!retrieveRes.ok) {
     const errText = await retrieveRes.text();
-    throw new Error(`Knowledge retrieve error: ${retrieveRes.status} ${errText}`);
+    console.error('[Chat API] knowledge retrieval response body', errText);
+    throw new Error(`Knowledge retrieve error: ${retrieveRes.status} ${retrieveRes.statusText} ${errText}`);
   }
 
   const payload = await retrieveRes.json();
@@ -132,18 +152,38 @@ export default async function handler(req, res) {
     const { messages = [] } = req.body;
     const recentMessages = normalizeMessages(messages);
     const question = latestUserQuestion(recentMessages);
-    const knowledgeChunks = await retrieveKnowledge(apiKey, question);
-    const knowledgeContext = formatKnowledgeContext(knowledgeChunks);
-    const ragPrompt = `${SYSTEM_PROMPT}
+    let systemPrompt = SYSTEM_PROMPT;
+
+    try {
+      console.log('[Chat API] knowledge retrieval start', {
+        entered: true,
+        has_query: Boolean(question),
+        query_length: question.length
+      });
+
+      const knowledgeChunks = await retrieveKnowledge(apiKey, question);
+      console.log('[Chat API] knowledge retrieval result', {
+        ok: true,
+        chunks: knowledgeChunks.length
+      });
+
+      const knowledgeContext = formatKnowledgeContext(knowledgeChunks);
+      systemPrompt = `${SYSTEM_PROMPT}
 
 ## 本次知识库检索
 知识库 ID：${KNOWLEDGE_ID}
 
 ${knowledgeContext}`;
+    } catch (err) {
+      console.error('[Chat API] knowledge retrieval error', {
+        message: err?.message || String(err)
+      });
+      console.warn('[Chat API] fallback to plain GLM');
+    }
 
     // Prepend system prompt
     const fullMessages = [
-      { role: 'system', content: ragPrompt },
+      { role: 'system', content: systemPrompt },
       ...recentMessages // Keep last 10 messages to stay within token limit
     ];
 
