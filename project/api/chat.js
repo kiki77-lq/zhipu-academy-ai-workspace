@@ -73,6 +73,14 @@ function formatKnowledgeContext(chunks) {
   }).join('\n\n');
 }
 
+function parseJsonSafely(text) {
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    return null;
+  }
+}
+
 async function retrieveKnowledge(apiKey, query) {
   if (!query) {
     console.log('[Chat API] knowledge retrieval skipped: empty query');
@@ -96,9 +104,15 @@ async function retrieveKnowledge(apiKey, query) {
   console.log('[Chat API] retrieve endpoint:', KNOWLEDGE_RETRIEVE_URL);
   console.log('[Chat API] knowledge retrieval request body fields', {
     fields: Object.keys(requestBody),
+    knowledge_ids: requestBody.knowledge_ids,
     query_length: requestBody.query.length,
     has_knowledge_id: requestBody.knowledge_ids.includes(KNOWLEDGE_ID),
-    knowledge_ids_count: requestBody.knowledge_ids.length
+    knowledge_ids_count: requestBody.knowledge_ids.length,
+    top_k: requestBody.top_k,
+    top_n: requestBody.top_n,
+    recall_method: requestBody.recall_method,
+    rerank_status: requestBody.rerank_status,
+    fractional_threshold: requestBody.fractional_threshold
   });
 
   const retrieveRes = await fetch(KNOWLEDGE_RETRIEVE_URL, {
@@ -117,12 +131,36 @@ async function retrieveKnowledge(apiKey, query) {
 
   if (!retrieveRes.ok) {
     const errText = await retrieveRes.text();
+    const errJson = parseJsonSafely(errText);
     console.error('[Chat API] knowledge retrieval response body', errText);
+    console.error('[Chat API] knowledge retrieval parsed error', {
+      status: retrieveRes.status,
+      statusText: retrieveRes.statusText,
+      response_json: errJson,
+      error_code: errJson?.code ?? errJson?.error?.code ?? errJson?.error_code,
+      error_message: errJson?.message ?? errJson?.error?.message ?? errJson?.msg
+    });
     throw new Error(`Knowledge retrieve error: ${retrieveRes.status} ${retrieveRes.statusText} ${errText}`);
   }
 
-  const payload = await retrieveRes.json();
+  const payloadText = await retrieveRes.text();
+  const payload = parseJsonSafely(payloadText);
+  if (!payload) {
+    console.error('[Chat API] knowledge retrieval invalid json', {
+      status: retrieveRes.status,
+      statusText: retrieveRes.statusText,
+      response_text: payloadText
+    });
+    throw new Error(`Knowledge retrieve error: invalid json response ${payloadText}`);
+  }
   if (payload.code && payload.code !== 200) {
+    console.error('[Chat API] knowledge retrieval parsed error', {
+      status: retrieveRes.status,
+      statusText: retrieveRes.statusText,
+      response_json: payload,
+      error_code: payload.code,
+      error_message: payload.message
+    });
     throw new Error(`Knowledge retrieve error: ${payload.code} ${payload.message || ''}`);
   }
 
