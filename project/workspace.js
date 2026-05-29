@@ -321,6 +321,44 @@
     });
   }
 
+  function bindSidebar() {
+    $$(".sb-group-label.is-collapsible").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.toggle;
+        const body = document.querySelector(`[data-body="${key}"]`);
+        if (!body) return;
+        btn.classList.toggle("is-collapsed");
+        body.classList.toggle("is-collapsed");
+      });
+    });
+
+    const homeNav = document.querySelector('.sb-menu-item[data-action="home"]');
+    const taskNav = document.querySelector('.sb-menu-item[data-action="scroll-to-tasks"]');
+    const mainCol = document.querySelector(".ws-main");
+
+    const setActive = target => {
+      $$(".sb-menu-item.is-active").forEach(el => el.classList.remove("is-active"));
+      target.classList.add("is-active");
+    };
+
+    if (homeNav) {
+      homeNav.addEventListener("click", e => {
+        e.preventDefault();
+        setActive(homeNav);
+        mainCol?.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    if (taskNav) {
+      taskNav.addEventListener("click", e => {
+        e.preventDefault();
+        setActive(taskNav);
+        const section = document.querySelector(".ws-launcher") || document.querySelector("#wsTaskList");
+        section?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     $$("[data-icon]").forEach(el => {
       el.innerHTML = window.Icons[el.dataset.icon] || "";
@@ -331,5 +369,6 @@
     bindIdentity();
     bindInput();
     bindKeys();
+    bindSidebar();
   });
 })();

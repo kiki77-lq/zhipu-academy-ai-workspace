@@ -14,83 +14,98 @@
 <div class="workspace shell">
 
   <aside class="ws-sidebar sidebar">
-    <div class="ws-sidebar-header">
-      <div class="ws-brand">
-        <div class="ws-brand-mark">
-          <img src="assets/zai-light.svg" alt="智谱书院" />
-        </div>
-        <div class="ws-brand-name">
-          <span class="zh">智谱书院</span>
-          <span class="en">Academy Workspace</span>
+
+    <div class="sb-header">
+      <div class="sb-brand">
+        <img src="assets/zai-light.svg" alt="智谱书院" class="sb-brand-icon" />
+        <div class="sb-brand-text">
+          <span class="sb-brand-name">智谱书院</span>
+          <span class="sb-brand-sub">Academy Workspace</span>
         </div>
       </div>
     </div>
 
-    <div class="ws-sidebar-content">
-      <section class="ws-side-group">
-        <div class="ws-side-label">Workspace</div>
-        <nav class="ws-nav ws-side-menu" aria-label="工作区导航">
-          <a class="ws-nav-item is-active" href="#" onclick="event.preventDefault()">
-            <span class="ws-nav-icon" data-icon="student" aria-hidden="true"></span>
-            <span class="ws-menu-text">Home</span>
+    <div class="sb-content">
+
+      <div class="sb-group">
+        <div class="sb-group-label">工作台</div>
+        <nav class="sb-menu" aria-label="工作区导航">
+          <a href="#" class="sb-menu-item is-active" data-action="home">
+            <span class="sb-menu-icon" data-icon="student" aria-hidden="true"></span>
+            <span class="sb-menu-text">首页</span>
           </a>
-          <div class="ws-nav-item is-disabled">
-            <span class="ws-nav-icon" data-icon="doc" aria-hidden="true"></span>
-            <span class="ws-menu-text">Current Tasks</span>
-            <span class="ws-nav-soon">soon</span>
+          <a href="#" class="sb-menu-item" data-action="scroll-to-tasks">
+            <span class="sb-menu-icon" data-icon="doc" aria-hidden="true"></span>
+            <span class="sb-menu-text">当前任务</span>
+          </a>
+          <div class="sb-menu-item is-disabled">
+            <span class="sb-menu-icon" data-icon="book" aria-hidden="true"></span>
+            <span class="sb-menu-text">培养路径</span>
+            <span class="sb-badge">soon</span>
           </div>
-          <div class="ws-nav-item is-disabled">
-            <span class="ws-nav-icon" data-icon="book" aria-hidden="true"></span>
-            <span class="ws-menu-text">Learning Plan</span>
-            <span class="ws-nav-soon">soon</span>
-          </div>
-          <div class="ws-nav-item is-disabled">
-            <span class="ws-nav-icon" data-icon="rule" aria-hidden="true"></span>
-            <span class="ws-menu-text">Templates</span>
-            <span class="ws-nav-soon">soon</span>
+          <div class="sb-menu-item is-disabled">
+            <span class="sb-menu-icon" data-icon="rule" aria-hidden="true"></span>
+            <span class="sb-menu-text">模板库</span>
+            <span class="sb-badge">soon</span>
           </div>
         </nav>
-      </section>
+      </div>
 
-      <section class="ws-side-group">
-        <div class="ws-side-label">Current Focus</div>
-        <ul class="ws-side-list">
-          <li><span>先修阶段 · 第3周</span></li>
-          <li><span>Mentor 对齐</span></li>
-          <li><span>先修任务</span></li>
-          <li><span>出勤记录</span></li>
-        </ul>
-      </section>
+      <div class="sb-group">
+        <button type="button" class="sb-group-label is-collapsible" data-toggle="current-focus">
+          <span>CURRENT FOCUS</span>
+          <span class="sb-chevron" aria-hidden="true">›</span>
+        </button>
+        <div class="sb-group-body" data-body="current-focus">
+          <ul class="sb-list">
+            <li class="sb-list-item"><span class="sb-dot"></span><span>先修阶段 · 第3周</span></li>
+            <li class="sb-list-item"><span class="sb-dot"></span><span>Mentor 对齐</span></li>
+            <li class="sb-list-item"><span class="sb-dot"></span><span>先修任务</span></li>
+            <li class="sb-list-item"><span class="sb-dot"></span><span>出勤记录</span></li>
+          </ul>
+        </div>
+      </div>
 
-      <section class="ws-side-group ws-kb">
-        <div class="ws-side-label">Knowledge Sources</div>
-        <ul class="ws-kb-list">
-          <li><span class="kb-doc" data-icon="doc" aria-hidden="true"></span><span class="kb-name">联培手册</span><small>indexed</small></li>
-          <li><span class="kb-doc" data-icon="book" aria-hidden="true"></span><span class="kb-name">培养体系</span><small>indexed</small></li>
-          <li><span class="kb-doc" data-icon="book" aria-hidden="true"></span><span class="kb-name">课程体系</span><small>indexed</small></li>
-          <li><span class="kb-doc" data-icon="doc" aria-hidden="true"></span><span class="kb-name">书院总览</span><small>indexed</small></li>
-        </ul>
-        <p class="ws-kb-meta">5 docs indexed</p>
-      </section>
+      <div class="sb-group">
+        <button type="button" class="sb-group-label is-collapsible" data-toggle="knowledge">
+          <span>KNOWLEDGE SOURCES</span>
+          <span class="sb-chevron" aria-hidden="true">›</span>
+        </button>
+        <div class="sb-group-body" data-body="knowledge">
+          <ul class="sb-list">
+            <li class="sb-list-item"><span class="sb-doc-icon" data-icon="doc" aria-hidden="true"></span><span>联培手册</span><span class="sb-badge is-muted">indexed</span></li>
+            <li class="sb-list-item"><span class="sb-doc-icon" data-icon="book" aria-hidden="true"></span><span>培养体系</span><span class="sb-badge is-muted">indexed</span></li>
+            <li class="sb-list-item"><span class="sb-doc-icon" data-icon="book" aria-hidden="true"></span><span>课程体系</span><span class="sb-badge is-muted">indexed</span></li>
+            <li class="sb-list-item"><span class="sb-doc-icon" data-icon="doc" aria-hidden="true"></span><span>书院总览</span><span class="sb-badge is-muted">indexed</span></li>
+          </ul>
+          <p class="sb-list-meta">5 docs indexed</p>
+        </div>
+      </div>
 
-      <section class="ws-side-group">
-        <div class="ws-side-label">Academy AI Context</div>
-        <ul class="ws-context-list">
-          <li><span class="ws-context-dot" aria-hidden="true"></span><span>已读取当前阶段</span></li>
-          <li><span class="ws-context-dot" aria-hidden="true"></span><span>已读取联培规则</span></li>
-          <li><span class="ws-context-dot" aria-hidden="true"></span><span>已读取 Mentor 制度</span></li>
-        </ul>
-      </section>
+      <div class="sb-group">
+        <button type="button" class="sb-group-label is-collapsible" data-toggle="ai-context">
+          <span>ACADEMY AI CONTEXT</span>
+          <span class="sb-chevron" aria-hidden="true">›</span>
+        </button>
+        <div class="sb-group-body" data-body="ai-context">
+          <ul class="sb-list">
+            <li class="sb-list-item"><span class="sb-status-dot is-green"></span><span>已读取当前阶段</span></li>
+            <li class="sb-list-item"><span class="sb-status-dot is-green"></span><span>已读取联培规则</span></li>
+            <li class="sb-list-item"><span class="sb-status-dot is-green"></span><span>已读取 Mentor 制度</span></li>
+          </ul>
+        </div>
+      </div>
+
     </div>
 
-    <div class="ws-sidebar-footer">
-      <div class="ws-user">
-        <div class="ws-user-avatar" aria-hidden="true">刘</div>
-        <div class="ws-user-copy">
-          <span class="ws-user-name">2026级联培生</span>
-          <span class="ws-user-meta">先修 · 第3周</span>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-user-avatar" aria-hidden="true">刘</div>
+        <div class="sb-user-info">
+          <span class="sb-user-name">2026级联培生</span>
+          <span class="sb-user-meta">先修 · 第3周</span>
         </div>
-        <span class="ws-user-status">Active</span>
+        <span class="sb-user-status">在线</span>
       </div>
     </div>
   </aside>
