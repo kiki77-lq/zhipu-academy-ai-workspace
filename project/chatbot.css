@@ -99,203 +99,82 @@
   font-family: "SF Mono", "Fira Code", monospace;
 }
 
-/* ---- Academy workspace idle state ---- */
+/* ---- Academy workspace idle state (AG-UI Interactive Dojo inspired) ---- */
 .chat-messages-idle {
   justify-content: center;
-  padding: 32px 28px 22px;
+  padding: 0;
 }
 
-.chat-idle-shell {
+.chat-welcome-thread {
   display: flex;
   flex-direction: column;
-  width: min(100%, 720px);
-  margin: 0 auto;
-  gap: 22px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 60px 32px 40px;
+  text-align: center;
   animation: chatFadeIn 0.25s ease-out;
 }
 
-.chat-idle-kicker {
-  display: inline-flex;
+.chat-welcome-status {
+  display: flex;
   align-items: center;
-  align-self: flex-start;
-  gap: 7px;
+  gap: 6px;
+  font-size: 12px;
   color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 650;
-  letter-spacing: 0.02em;
+  margin-bottom: 24px;
 }
 
-.chat-idle-dot {
-  width: 7px;
-  height: 7px;
+.chat-status-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(58, 116, 94, 0.08);
+  box-shadow: 0 0 0 3px rgba(58, 116, 94, 0.1);
 }
 
-.chat-idle-head {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.chat-idle-title {
-  margin: 0;
-  color: var(--text-primary);
+.chat-welcome-heading {
   font-size: 22px;
-  font-weight: 680;
-  letter-spacing: 0;
-  line-height: 1.25;
-}
-
-.chat-idle-desc {
-  margin: 0;
-  max-width: 560px;
-  color: var(--text-secondary);
-  font-size: 13.5px;
-  line-height: 1.7;
-}
-
-.chat-suggestion-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.chat-suggestion-card {
-  border: 1px solid var(--border-subtle);
-  border-radius: 15px;
-  background: rgba(255, 255, 255, 0.72);
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
-}
-
-.chat-suggestion-card:hover {
-  border-color: var(--accent-border);
-  background: rgba(58, 116, 94, 0.035);
-}
-
-.chat-capability-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.chat-capability-heading {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 680;
-  letter-spacing: 0;
-}
-
-.chat-capability-strip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  padding: 8px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  background: rgba(250, 250, 249, 0.72);
-}
-
-.chat-capability-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  padding: 7px 8px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.54);
-}
-
-.chat-capability-index {
-  color: var(--text-disabled);
-  font-size: 10px;
-  font-weight: 720;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.chat-capability-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-
-.chat-capability-title {
+  font-weight: 600;
   color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 650;
-  line-height: 1.25;
-  white-space: nowrap;
-}
-
-.chat-capability-desc {
-  color: var(--text-muted);
-  font-size: 11px;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
   line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.chat-suggestion-section {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.chat-suggestion-title {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 680;
-  letter-spacing: 0;
-}
-
-.chat-suggestion-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-height: 88px;
-  padding: 13px 34px 13px 14px;
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-}
-
-.chat-suggestion-card-title {
-  color: var(--text-primary);
+.chat-welcome-sub {
   font-size: 13.5px;
-  font-weight: 650;
-  line-height: 1.35;
-}
-
-.chat-suggestion-card-desc {
   color: var(--text-muted);
-  font-size: 12.5px;
-  line-height: 1.5;
+  max-width: 420px;
+  line-height: 1.65;
+  margin: 0 0 32px;
 }
 
-.chat-suggestion-card:hover .chat-suggestion-card-title {
-  color: var(--accent-hover);
+.chat-quick-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 480px;
 }
 
-.chat-suggestion-action {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  color: var(--text-disabled);
+.chat-pill {
+  padding: 8px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
   font-size: 13px;
-  line-height: 1;
-  transition: color 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  line-height: 1.3;
+  font-family: inherit;
 }
 
-.chat-suggestion-card:hover .chat-suggestion-action {
+.chat-pill:hover {
+  border-color: var(--accent);
   color: var(--accent);
-  transform: translateX(2px);
+  background: rgba(58, 116, 94, 0.03);
 }
 
 /* ---- AI response footer (source tag + follow-ups) ---- */
@@ -474,11 +353,10 @@
 
 .chat-input-bar input {
   flex: 1;
-  height: 42px;
-  padding: 0 17px;
-  border: 1px solid var(--border-default);
-  border-radius: 22px;
-  font-size: 13px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-default);
+  border-radius: 20px;
+  font-size: 14px;
   background: var(--bg-surface);
   color: var(--text-primary);
   outline: none;
@@ -488,7 +366,7 @@
 .chat-input-bar input:focus {
   border-color: var(--accent);
   background: var(--bg-surface);
-  box-shadow: 0 0 0 3px rgba(58, 116, 94, 0.08);
+  box-shadow: 0 0 0 3px rgba(58, 116, 94, 0.06);
 }
 
 .chat-input-bar input::placeholder {
@@ -496,8 +374,8 @@
 }
 
 .chat-input-bar button {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border: none;
   border-radius: 50%;
   background: var(--accent);
@@ -528,16 +406,12 @@
 }
 
 @media (max-width: 980px) {
-  .chat-suggestion-grid {
-    grid-template-columns: 1fr;
+  .chat-welcome-thread {
+    padding: 40px 20px 32px;
   }
 
-  .chat-capability-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .chat-messages-idle {
-    justify-content: flex-start;
+  .chat-welcome-heading {
+    font-size: 19px;
   }
 }
 

@@ -146,82 +146,27 @@ window.Chatbot = (function () {
     pb.innerHTML = `
       <div class="chat-container">
         <div class="chat-messages chat-messages-idle" id="chatMessages">
-          <section class="chat-idle-shell" aria-label="Academy AI 空闲态">
-            <div class="chat-idle-kicker">
-              <span class="chat-idle-dot" aria-hidden="true"></span>
+          <div class="chat-welcome-thread">
+            <div class="chat-welcome-status">
+              <span class="chat-status-dot" aria-hidden="true"></span>
               <span>Academy AI Ready</span>
             </div>
 
-            <div class="chat-idle-head">
-              <h2 class="chat-idle-title">Academy AI 会为你整理</h2>
-              <p class="chat-idle-desc">选择一个任务，或直接提问。Academy AI 会结合书院知识库，为你整理结论、步骤、依据和可复制模板。</p>
-            </div>
+            <h2 class="chat-welcome-heading">有什么可以帮你的？</h2>
+            <p class="chat-welcome-sub">Academy AI 会基于书院知识库，为你整理结论、步骤、来源依据和可复制模板。</p>
 
-            <div class="chat-capability-section" aria-label="结构化输出能力">
-              <h3 class="chat-capability-heading">输出结构</h3>
-              <div class="chat-capability-strip">
-                <div class="chat-capability-item">
-                  <span class="chat-capability-index">01</span>
-                  <span class="chat-capability-copy">
-                    <span class="chat-capability-title">一句话结论</span>
-                    <span class="chat-capability-desc">先给出明确判断</span>
-                  </span>
-                </div>
-                <div class="chat-capability-item">
-                  <span class="chat-capability-index">02</span>
-                  <span class="chat-capability-copy">
-                    <span class="chat-capability-title">行动清单</span>
-                    <span class="chat-capability-desc">拆成可执行步骤</span>
-                  </span>
-                </div>
-                <div class="chat-capability-item">
-                  <span class="chat-capability-index">03</span>
-                  <span class="chat-capability-copy">
-                    <span class="chat-capability-title">来源依据</span>
-                    <span class="chat-capability-desc">标注知识库来源</span>
-                  </span>
-                </div>
-                <div class="chat-capability-item">
-                  <span class="chat-capability-index">04</span>
-                  <span class="chat-capability-copy">
-                    <span class="chat-capability-title">可复制模板</span>
-                    <span class="chat-capability-desc">生成可复用文本</span>
-                  </span>
-                </div>
-              </div>
+            <div class="chat-quick-pills">
+              <button class="chat-pill" type="button" data-question="入院第一周要做什么？">入院第一周要做什么？</button>
+              <button class="chat-pill" type="button" data-question="请假会影响补贴吗？">请假会影响补贴吗？</button>
+              <button class="chat-pill" type="button" data-question="如何和 Mentor 沟通？">如何和 Mentor 沟通？</button>
+              <button class="chat-pill" type="button" data-question="出勤打卡怎么处理？">出勤打卡怎么处理？</button>
             </div>
-
-            <div class="chat-suggestion-section">
-              <h3 class="chat-suggestion-title">你可以这样开始</h3>
-              <div class="chat-suggestion-grid">
-                <button class="chat-suggestion-card" type="button" data-question="入院第一周要做什么？">
-                  <span class="chat-suggestion-card-title">入院第一周要做什么？</span>
-                  <span class="chat-suggestion-card-desc">查看 Day 1 到 Day 7 的关键动作。</span>
-                  <span class="chat-suggestion-action" aria-hidden="true">→</span>
-                </button>
-                <button class="chat-suggestion-card" type="button" data-question="请假会影响补贴吗？">
-                  <span class="chat-suggestion-card-title">请假会影响补贴吗？</span>
-                  <span class="chat-suggestion-card-desc">理解请假、出勤与津贴之间的关系。</span>
-                  <span class="chat-suggestion-action" aria-hidden="true">→</span>
-                </button>
-                <button class="chat-suggestion-card" type="button" data-question="如何和 Mentor 沟通？">
-                  <span class="chat-suggestion-card-title">如何和 Mentor 沟通？</span>
-                  <span class="chat-suggestion-card-desc">获取 1:1 频率、议程模板和卡点求助方式。</span>
-                  <span class="chat-suggestion-action" aria-hidden="true">→</span>
-                </button>
-                <button class="chat-suggestion-card" type="button" data-question="出勤打卡怎么处理？">
-                  <span class="chat-suggestion-card-title">出勤打卡怎么处理？</span>
-                  <span class="chat-suggestion-card-desc">查看每日打卡、补卡和远程办公边界。</span>
-                  <span class="chat-suggestion-action" aria-hidden="true">→</span>
-                </button>
-              </div>
-            </div>
-          </section>
+          </div>
         </div>
         ${renderComposer(false)}
       </div>`;
 
-    pb.querySelectorAll('.chat-suggestion-card').forEach(btn => {
+    pb.querySelectorAll('.chat-pill').forEach(btn => {
       btn.addEventListener('click', () => {
         const q = btn.dataset.question;
         if (q && !isStreaming) send(q);
@@ -259,9 +204,10 @@ window.Chatbot = (function () {
       // Don't render the empty assistant placeholder — reasoning card covers this
       if (!isUser && isStreaming && isLast && !m.content) return '';
 
+      const cleanContent = isUser ? m.content : m.content.replace(/^\s+/, '');
       const bubbleContent = isUser
-        ? md(m.content)
-        : md(m.content) + (isStreaming && isLast ? '<span class="chat-cursor"></span>' : '');
+        ? md(cleanContent)
+        : md(cleanContent) + (isStreaming && isLast ? '<span class="chat-cursor"></span>' : '');
 
       let actionsHTML = '';
       if (!isUser && m.content && !(isStreaming && isLast)) {
@@ -349,7 +295,8 @@ window.Chatbot = (function () {
     const allAI = document.querySelectorAll('.chat-msg.is-ai .chat-bubble');
     const last = allAI[allAI.length - 1];
     if (last) {
-      last.innerHTML = md(content) + '<span class="chat-cursor"></span>';
+      const clean = content.replace(/^\s+/, '');
+      last.innerHTML = md(clean) + '<span class="chat-cursor"></span>';
       const msgBox = $('#chatMessages');
       if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
     }
@@ -448,6 +395,9 @@ window.Chatbot = (function () {
       completed = true;
 
       const lastMsg = messages[messages.length - 1];
+      if (lastMsg && lastMsg.role === 'assistant') {
+        lastMsg.content = lastMsg.content.trim();
+      }
       if (completed && lastMsg?.role === 'assistant' && lastMsg.content) {
         appendHistory('assistant', lastMsg.content);
       }
