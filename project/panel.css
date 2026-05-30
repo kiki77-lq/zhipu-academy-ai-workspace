@@ -110,11 +110,15 @@
 }
 
 .ans-block {
-  padding: 22px 34px;
-  border-bottom: 1px solid rgba(28, 31, 29, 0.05);
+  padding: 28px 34px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.ans-block:last-of-type {
+  border-bottom: none;
 }
 
 .ans-block.reveal {
@@ -131,12 +135,16 @@
 }
 
 .ans-block h4 {
-  font-size: 13px;
-  font-weight: 680;
+  font-size: 15px;
+  font-weight: 600;
   color: var(--text-primary);
+  margin-bottom: 14px;
 }
 
-.ans-block h4 .num,
+.ans-block h4 .num {
+  display: none;
+}
+
 .section-num {
   width: 20px;
   height: 20px;
@@ -168,9 +176,9 @@
 .tldr {
   padding: 15px 16px;
   border-radius: var(--radius-xl);
-  background: var(--bg-surface-soft);
+  background: rgba(0, 0, 0, 0.015);
   border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--border-default);
   font-size: 14px;
   line-height: 1.7;
   color: var(--text-primary);
@@ -233,26 +241,11 @@
 }
 
 .checklist li:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: 28px;
-  width: 2px;
-  height: calc(100% - 8px);
-  border-radius: 1px;
-  background: rgba(30, 35, 30, 0.10);
+  display: none;
 }
 
-.checklist li.is-done:not(:last-child)::after {
-  background: rgba(31, 143, 95, 0.55);
-}
-
-.checklist li.is-current:not(:last-child)::after {
-  background: rgba(31, 143, 95, 0.28);
-}
-
-.checklist li.is-pending:not(:last-child)::after {
-  background: var(--border-subtle);
+.checklist li {
+  margin-bottom: 4px;
 }
 
 .checklist li.is-done .step {
@@ -296,10 +289,6 @@
 
 .checklist li.is-current::before {
   content: none;
-}
-
-.checklist li.is-current::after {
-  left: 13px;
 }
 
 .checklist li.is-current .step {
@@ -928,6 +917,33 @@
   color: var(--accent);
 }
 
+/* ---- Follow-up entry (Part 5) ---- */
+.panel-followup-entry {
+  margin-top: 32px;
+  padding: 24px 34px 28px;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.panel-followup-btn {
+  padding: 10px 20px;
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.panel-followup-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(58, 116, 94, 0.03);
+}
+
 @media (max-width: 1180px) {
   .ws-main {
     width: 320px;
@@ -941,7 +957,8 @@
   .section,
   .asst-head,
   .asst-section,
-  .ws-idle {
+  .ws-idle,
+  .panel-followup-entry {
     padding-left: 24px;
     padding-right: 24px;
   }

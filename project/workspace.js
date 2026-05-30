@@ -40,7 +40,12 @@
   function renderTaskList() {
     const list = $("#wsTaskList");
     const t = tasks();
-    list.innerHTML = t.map((task, i) => `
+    list.innerHTML = t.map((task, i) => {
+      const tags = task.tags || [];
+      const tagsHTML = tags.length
+        ? `<div class="task-tags">${tags.map(tag => `<span class="task-tag">${tag}</span>`).join("")}</div>`
+        : "";
+      return `
       <li
         class="ws-task ${task.id === currentTaskId ? "is-active" : ""}"
         data-task-id="${task.id}"
@@ -52,10 +57,12 @@
         <div class="body">
           <p class="t">${task.title}</p>
           <p class="d">${task.desc}</p>
+          ${tagsHTML}
         </div>
         ${i === 0 ? '<span class="badge">起点</span>' : ""}
       </li>
-    `).join("");
+    `;
+    }).join("");
     list.querySelectorAll(".ws-task").forEach(li => {
       const activate = () => openTask(li.dataset.taskId);
       li.addEventListener("click", activate);
@@ -242,12 +249,26 @@
           `).join("")}
         </div>
       </div>
+
+      <div class="panel-followup-entry">
+        <button class="panel-followup-btn" type="button" data-task-title="${task.title}">
+          💬 就「${task.title}」继续追问
+        </button>
+      </div>
     `;
     const blocks = $$(".ans-block", $("#panelBody"));
     blocks.forEach((b, i) => setTimeout(() => b.classList.add("reveal"), 80 + i * 120));
 
     $$(".next-step-card", $("#panelBody")).forEach(btn => {
       btn.addEventListener("click", () => openTask(btn.dataset.taskId));
+    });
+
+    $("#panelBody .panel-followup-btn")?.addEventListener("click", () => {
+      const title = $("#panelBody .panel-followup-btn").dataset.taskTitle;
+      if (!title || !window.Chatbot?.start) return;
+      currentTaskId = null;
+      syncActiveTaskState();
+      window.Chatbot.start(`关于「${title}」，我想进一步了解...`);
     });
 
     $("#copyBtn")?.addEventListener("click", () => {

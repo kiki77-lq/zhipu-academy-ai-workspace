@@ -658,6 +658,41 @@
   background: var(--bg-surface-soft);
 }
 
+/* ---- Task tags (Part 3) ---- */
+.task-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.task-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-muted);
+}
+
+.ws-task.is-active .task-tag {
+  background: rgba(58, 116, 94, 0.08);
+  color: var(--accent);
+}
+
+/* ---- Task card active state (Part 4 — AG-UI demo list inspired) ---- */
+.ws-task.is-active {
+  background: rgba(58, 116, 94, 0.04);
+}
+
+.ws-task.is-active::before {
+  background: var(--accent);
+  width: 2px;
+}
+
 .ws-quick {
   display: none;
 }
