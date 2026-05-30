@@ -511,46 +511,54 @@
   color: var(--accent);
 }
 
-.template {
-  border-radius: var(--radius-xl);
-  border: none;
-  background: var(--bg-surface-soft);
+.template,
+.template-block {
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: #F6F7F4;
   overflow: hidden;
+  box-shadow: none;
 }
 
-.template-head {
+.template-head,
+.template-block-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   border-bottom: 1px solid rgba(28, 31, 29, 0.06);
   background: transparent;
 }
 
-.template-head .label {
-  color: var(--text-secondary);
-  font-size: 12px;
+.template-head .label,
+.template-block-label {
+  color: var(--text-muted);
+  font-size: 11.5px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
 }
 
 .template-head .who {
-  color: var(--text-primary);
-  font-weight: 600;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
-.copy-btn {
+.copy-btn,
+.template-block-copy {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 9px 16px;
-  border: none;
+  padding: 6px 10px;
+  border: 1px solid rgba(28, 31, 29, 0.08);
+  border-radius: 8px;
   background: var(--bg-surface);
   font-size: 12px;
   color: var(--text-secondary);
   cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
 }
 
 .copy-btn svg {
@@ -560,16 +568,23 @@
 }
 
 .copy-btn.copied,
-.copy-btn:hover {
+.copy-btn:hover,
+.template-block-copy:hover {
+  border-color: rgba(31, 143, 95, 0.28);
+  background: rgba(31, 143, 95, 0.04);
   color: var(--accent);
 }
 
-.template-body {
+.template-body,
+.template-block-content {
   padding: 14px 16px;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
   font-size: 12.5px;
-  line-height: 1.65;
-  color: var(--text-secondary);
+  line-height: 1.7;
+  color: var(--text-primary);
   white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
   background: transparent;
 }
 

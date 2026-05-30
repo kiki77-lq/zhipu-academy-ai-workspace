@@ -225,15 +225,15 @@
 
       <div class="ans-block">
         <h4><span class="num ${numClass}">4</span>可复制模板</h4>
-        <div class="template">
-          <div class="template-head">
-            <span class="label">${window.Icons.share}<span class="who">${template.who}</span></span>
-            <button class="copy-btn" id="copyBtn">
+        <div class="template template-block">
+          <div class="template-head template-block-head">
+            <span class="label template-block-label">${window.Icons.share}<span>可复制模板</span><span class="who">${template.who}</span></span>
+            <button class="copy-btn template-block-copy" id="copyBtn" type="button">
               ${window.Icons.copy}
               <span>复制</span>
             </button>
           </div>
-          <div class="template-body" id="templateBody">${template.body}</div>
+          <div class="template-body template-block-content" id="templateBody">${template.body}</div>
         </div>
       </div>
 
@@ -282,7 +282,7 @@
         btn.classList.remove("copied");
         btn.querySelector("span").textContent = "复制";
         btn.querySelector("svg").outerHTML = window.Icons.copy;
-      }, 1500);
+      }, 1200);
     });
   }
 
@@ -378,6 +378,47 @@
         section?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     }
+
+    const focusActions = {
+      "prework-week": { question: "先修第三周我应该重点做什么？" },
+      mentor: { title: "如何和 Mentor 沟通？", question: "如何和 Mentor 沟通？" },
+      "prework-task": { title: "入院第一周要做什么？", question: "入院第一周要做什么？" },
+      attendance: { title: "出勤和打卡怎么处理？", question: "出勤和打卡怎么处理？" }
+    };
+
+    const askAssistant = question => {
+      if (!question || !window.Chatbot?.start) return;
+      currentTaskId = null;
+      syncActiveTaskState();
+      window.Chatbot.start(question);
+    };
+
+    $$("[data-focus-action]").forEach(item => {
+      const activate = () => {
+        const config = focusActions[item.dataset.focusAction];
+        if (!config) return;
+
+        item.classList.add("is-triggered");
+        setTimeout(() => item.classList.remove("is-triggered"), 700);
+
+        if (config.title) {
+          const matchedTask = tasks().find(task => task.title === config.title);
+          if (matchedTask) {
+            openTask(matchedTask.id);
+            return;
+          }
+        }
+
+        askAssistant(config.question);
+      };
+
+      item.addEventListener("click", activate);
+      item.addEventListener("keydown", e => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        e.preventDefault();
+        activate();
+      });
+    });
   }
 
   document.addEventListener("DOMContentLoaded", () => {
