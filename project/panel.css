@@ -189,7 +189,7 @@
 }
 
 .check-progress {
-  margin: -2px 0 12px;
+  margin: -4px 0 12px;
 }
 
 .check-progress-meta {
@@ -197,17 +197,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 7px;
+  margin-bottom: 6px;
   color: var(--text-muted);
   font-size: 11.5px;
   line-height: 1.3;
 }
 
 .check-progress-bar {
-  height: 4px;
+  height: 3px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(30, 35, 30, 0.08);
+  background: rgba(30, 35, 30, 0.06);
 }
 
 .check-progress-fill {
@@ -222,22 +222,32 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.checklist li {
-  position: relative;
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 12px 10px 0;
-  min-height: 72px;
-  border-radius: var(--radius-lg);
-  transition: background-color 0.12s ease, border-color 0.12s ease;
+  flex-direction: column;
+  gap: 6px;
+  border-top: none;
 }
 
-.checklist li:hover {
-  background: var(--bg-surface-soft);
+.checklist li,
+.action-step-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  min-height: 0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.checklist li:hover,
+.action-step-row:hover {
+  background: rgba(31, 143, 95, 0.035);
+  border-color: rgba(31, 143, 95, 0.12);
+  transform: translateY(-1px);
 }
 
 .checklist li:not(:last-child)::after {
@@ -245,16 +255,55 @@
 }
 
 .checklist li {
-  margin-bottom: 4px;
+  margin-bottom: 0;
 }
 
-.checklist li.is-done .step {
+.checklist li.is-completed {
+  background: rgba(31, 143, 95, 0.025);
+}
+
+.action-checkbox {
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  padding: 3px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--text-muted);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.action-checkbox span {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.action-checkbox:hover span,
+.action-checkbox:focus-visible span {
+  border-color: rgba(31, 143, 95, 0.55);
+}
+
+.action-checkbox:focus-visible {
+  outline: 2px solid rgba(31, 143, 95, 0.18);
+  outline-offset: 2px;
+}
+
+.action-step-row.is-completed .action-checkbox span {
   background: var(--accent);
   border-color: var(--accent);
-  color: transparent;
 }
 
-.checklist li.is-done .step::after {
+.action-step-row.is-completed .action-checkbox span::after {
   content: "✓";
   position: absolute;
   inset: 0;
@@ -262,94 +311,23 @@
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
 }
 
-.checklist li.is-done {
-  background: transparent;
-}
-
-.checklist li.is-done .t {
+.action-step-row.is-completed .t {
   color: var(--text-secondary);
   font-weight: 500;
 }
 
-.checklist li.is-done .d {
+.action-step-row.is-completed .d {
   color: var(--text-muted);
-}
-
-.checklist li.is-current {
-  isolation: isolate;
-  padding: 12px 12px 12px 0;
-  background: var(--bg-surface-soft);
-  border: 1px solid var(--border-default);
-  box-shadow: inset 3px 0 0 var(--accent);
-}
-
-.checklist li.is-current::before {
-  content: none;
-}
-
-.checklist li.is-current .step {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #FFFFFF;
-}
-
-.checklist li.is-current .t {
-  color: var(--text-primary);
-  font-weight: 650;
-}
-
-.checklist li.is-current .d {
-  color: var(--text-secondary);
-}
-
-.checklist li.is-pending .step {
-  background: var(--bg-surface);
-  border: 1.5px solid var(--border-default);
-  color: var(--text-muted);
-}
-
-.checklist li.is-pending {
-  background: var(--bg-surface);
-}
-
-.checklist li.is-pending .t {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.checklist li.is-pending .d {
-  color: var(--text-muted);
-}
-
-.checklist li.is-pending:hover .t,
-.checklist li.is-pending:hover .d {
-  color: var(--text-secondary);
-}
-
-.checklist .step {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 11px;
-  font-weight: 700;
-  border: 1.5px solid var(--border-default);
-  color: var(--text-muted);
-  background: var(--bg-surface);
-  position: relative;
 }
 
 .checklist .body {
   min-width: 0;
   flex: 1;
-  padding-top: 1px;
+  padding-top: 0;
 }
 
 .checklist .t {
@@ -363,8 +341,35 @@
 .checklist .d {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.58;
+}
+
+.action-followup {
+  opacity: 0;
+  transform: translateY(-1px);
+  padding: 4px 9px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: opacity 0.15s ease, border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.action-step-row:hover .action-followup,
+.action-step-row:focus-within .action-followup {
+  opacity: 1;
+}
+
+.action-followup:hover,
+.action-followup:focus-visible {
+  border-color: rgba(31, 143, 95, 0.22);
+  background: rgba(31, 143, 95, 0.06);
+  color: var(--text-primary);
+  outline: none;
 }
 
 .sources,
@@ -978,8 +983,4 @@
     padding-right: 24px;
   }
 
-  .checklist li.is-current::before {
-    left: -24px;
-    right: -24px;
-  }
 }

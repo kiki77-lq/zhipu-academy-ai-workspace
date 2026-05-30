@@ -22,6 +22,14 @@
     return found.length >= 2 ? found : all.slice(0, 2);
   }
 
+  function escapeAttr(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
   function syncActiveTaskState() {
     $$(".ws-task").forEach(li => {
       const isActive = li.dataset.taskId === currentTaskId;
@@ -146,8 +154,8 @@
     const { tldr, checklist, sources, template } = task;
     const nextTasks = getNextTasks(task.id);
     const checklistTotal = checklist.length;
-    const checklistDone = checklistTotal > 0 ? 1 : 0;
-    const checklistProgress = checklistTotal > 0 ? Math.round((checklistDone / checklistTotal) * 100) : 0;
+    const checklistDone = 0;
+    const checklistProgress = 0;
 
     $("#crumbTask").textContent = task.title;
     $("#panelBody").innerHTML = `
@@ -176,14 +184,17 @@
         </div>
         <ol class="checklist">
           ${checklist.map((c, i) => {
-            const state = i === 0 ? "is-done" : i === 1 ? "is-current" : "is-pending";
+            const title = c.t;
             return `
-            <li class="${state}">
-              <span class="step">${String(i + 1).padStart(2, "0")}</span>
+            <li class="action-step-row" data-step-title="${escapeAttr(title)}">
+              <button class="action-checkbox" type="button" aria-pressed="false" aria-label="标记完成：${escapeAttr(title)}">
+                <span aria-hidden="true"></span>
+              </button>
               <div class="body">
                 <p class="t">${c.t}</p>
                 <p class="d">${c.d}</p>
               </div>
+              <button class="action-followup" type="button" data-step-title="${escapeAttr(title)}">追问</button>
             </li>`;
           }).join("")}
         </ol>
@@ -261,6 +272,39 @@
 
     $$(".next-step-card", $("#panelBody")).forEach(btn => {
       btn.addEventListener("click", () => openTask(btn.dataset.taskId));
+    });
+
+    const refreshChecklistProgress = () => {
+      const rows = $$(".action-step-row", $("#panelBody"));
+      const done = rows.filter(row => row.classList.contains("is-completed")).length;
+      const total = rows.length;
+      const progress = total > 0 ? Math.round((done / total) * 100) : 0;
+      const meta = $(".check-progress-meta", $("#panelBody"));
+      const fill = $(".check-progress-fill", $("#panelBody"));
+      if (meta) {
+        meta.innerHTML = `<span>已完成 ${done} / ${total}</span><span>${progress}%</span>`;
+      }
+      if (fill) fill.style.width = `${progress}%`;
+    };
+
+    $$(".action-step-row", $("#panelBody")).forEach(row => {
+      const checkbox = $(".action-checkbox", row);
+      checkbox?.addEventListener("click", event => {
+        event.stopPropagation();
+        const completed = !row.classList.contains("is-completed");
+        row.classList.toggle("is-completed", completed);
+        checkbox.setAttribute("aria-pressed", completed ? "true" : "false");
+        refreshChecklistProgress();
+      });
+    });
+
+    $$(".action-followup", $("#panelBody")).forEach(btn => {
+      btn.addEventListener("click", event => {
+        event.stopPropagation();
+        const title = btn.dataset.stepTitle;
+        if (!title || !window.Chatbot?.start) return;
+        window.Chatbot.start(`关于「${title}」，我具体应该怎么做？`);
+      });
     });
 
     $("#panelBody .panel-followup-btn")?.addEventListener("click", () => {
