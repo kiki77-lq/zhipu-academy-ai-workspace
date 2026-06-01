@@ -161,6 +161,15 @@ window.Chatbot = (function () {
               <button class="chat-pill" type="button" data-question="如何和 Mentor 沟通？">如何和 Mentor 沟通？</button>
               <button class="chat-pill" type="button" data-question="出勤打卡怎么处理？">出勤打卡怎么处理？</button>
             </div>
+
+            <div class="chat-welcome-feedback">
+              <a href="https://zhipu-ai.feishu.cn/share/base/form/shrcn5YHxX3J2tvku6AuZVAdyFn"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="chat-welcome-feedback-link">
+                💬 有些话不方便直接说？匿名告诉书院 →
+              </a>
+            </div>
           </div>
         </div>
         ${renderComposer(false)}
@@ -228,6 +237,15 @@ window.Chatbot = (function () {
               <div class="chat-followups">
                 ${followUps.map(q => `<button class="chat-followup-btn" data-question="${q}">${q}</button>`).join('')}
               </div>` : ''}
+          </div>`;
+        actionsHTML += `
+          <div class="chat-feedback-hint">
+            <a href="https://zhipu-ai.feishu.cn/share/base/form/shrcn5YHxX3J2tvku6AuZVAdyFn"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="chat-feedback-link">
+              这个回答没帮到你？告诉我们 →
+            </a>
           </div>`;
       }
 
