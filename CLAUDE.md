@@ -97,16 +97,18 @@ Student Context → Task / Question → Structured Answer / Chat → Action → 
 | `api/chat.js` | Vercel Serverless Function：代理 GLM API 请求，含 system prompt 和知识库检索 |
 | `vercel.json` | Vercel 部署配置（outputDirectory: project，serverless function 超时 30s） |
 
-### Secondary files（非必要不修改）
+### Secondary files（当前未被加载 — 待清理候选）
+> 经静态分析确认：以下 7 个 CSS 均未被 `index.html` / `智谱书院 AI Portal.html` 通过 `<link>` 加载，也无 `@import` 或 JS 动态注入，**当前线上不生效，属待清理候选**（保留待人工确认后再决定是否删除）。
+
 | File | Purpose |
 |------|---------|
-| `project/tasks.css` | 任务卡片特定样式 |
-| `project/hero.css` | 中间区域标题样式 |
-| `project/polish.css` | 视觉精修覆盖 |
-| `project/refine.css` | 额外精修覆盖 |
-| `project/extras.css` | 额外样式微调 |
-| `project/themes.css` | 主题变量 |
-| `project/footer.css` | 底部样式 |
+| `project/tasks.css` | 任务卡片特定样式 — 当前未加载、不生效，待清理候选 |
+| `project/hero.css` | 中间区域标题样式 — 当前未加载、不生效，待清理候选 |
+| `project/polish.css` | 视觉精修覆盖 — 当前未加载、不生效，待清理候选 |
+| `project/refine.css` | 额外精修覆盖 — 当前未加载、不生效，待清理候选 |
+| `project/extras.css` | 额外样式微调 — 当前未加载、不生效，待清理候选 |
+| `project/themes.css` | 主题变量 — 当前未加载、不生效，待清理候选 |
+| `project/footer.css` | 底部样式 — 当前未加载、不生效，待清理候选 |
 
 ### Legacy files（不使用）
 | File | Purpose |
